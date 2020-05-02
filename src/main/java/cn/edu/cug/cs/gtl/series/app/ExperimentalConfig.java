@@ -42,7 +42,7 @@ public class ExperimentalConfig {
     }
 
     public ExperimentalConfig(String runtimeDatabase) {
-
+        Config.setConfigFile("series.properties");
         Connection connection = null;
         List<String> valid_dataset_names = new ArrayList<>();
 
@@ -108,6 +108,7 @@ public class ExperimentalConfig {
 
 
     public ExperimentalConfig() {
+        Config.setConfigFile("series.properties");
         this.dataDirectory = Config.getDataDirectory() + File.separator + "UCRArchive_2018";
         resultFileName = "example.xls";
         dataFiles = new ArrayList<>();
