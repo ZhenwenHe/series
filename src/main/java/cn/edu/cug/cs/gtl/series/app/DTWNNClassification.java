@@ -9,7 +9,6 @@ import cn.edu.cug.cs.gtl.series.common.MultiSeries;
 import cn.edu.cug.cs.gtl.series.common.Series;
 import cn.edu.cug.cs.gtl.series.common.TimeSeries;
 import cn.edu.cug.cs.gtl.series.distances.DTWDistanceMetrics;
-import cn.edu.cug.cs.gtl.series.distances.EuclideanDistanceMetrics;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -39,10 +39,13 @@ public class Series implements Storable {
         List<double[]> yss = new ArrayList<>();
         List<String> labels = new ArrayList<>();
         while (line != null) {
+            //读取一行，以\t分隔
             String[] columns = line.split(FileDataSplitter.TSV.getDelimiter());
             length = columns.length - 1;
             double[] ys = new double[length];
+            //第一个元素为标签
             String label = columns[0];
+            //接下来的元素为时序值
             for (int i = 1; i < columns.length; ++i) {
                 ys[i - 1] = Double.parseDouble(columns[i]);
             }

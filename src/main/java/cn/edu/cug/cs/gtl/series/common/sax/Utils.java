@@ -3,7 +3,6 @@ package cn.edu.cug.cs.gtl.series.common.sax;
 import cn.edu.cug.cs.gtl.array.Array;
 import cn.edu.cug.cs.gtl.series.common.MultiSeries;
 import cn.edu.cug.cs.gtl.series.common.Series;
-import cn.edu.cug.cs.gtl.series.common.TimeSeries;
 import org.apache.commons.math3.distribution.NormalDistribution;
 
 import java.text.NumberFormat;
