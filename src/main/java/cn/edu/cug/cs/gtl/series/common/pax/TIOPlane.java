@@ -138,7 +138,10 @@ public class TIOPlane implements Storable {
 
     /**
      * 将TIOPoint映射到4X4的网格中
-     *
+     *    7  6     2  3
+     *    5  4     0  1
+     *    13 12    8  9
+     *    15 14   10  11
      * @param tioPoint
      * @return hexadecimal index [0-15]
      */
@@ -167,7 +170,7 @@ public class TIOPlane implements Storable {
             } else {
                 return 7;
             }
-        } else if (v < 0 && a >= 0) {//第三象限
+        } else if (v < 0 && a < 0) {//第三象限
             if (v >= -0.25 && a >= -0.25) {
                 return 12;
             } else if (v >= -0.25 && a < -0.25) {
