@@ -32,7 +32,7 @@
         </repository>
         <repository>
             <id>zhenwenhe-repository</id>
-            <url>https://raw.github.com/zhenwenhe/repository/snapshot</url>
+            <url>https://raw.github.com/zhenwenhe/repository/master</url>
         </repository>
     </repositories>
 
