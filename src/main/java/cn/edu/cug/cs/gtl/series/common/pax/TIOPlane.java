@@ -193,6 +193,62 @@ public class TIOPlane implements Storable {
         }
     }
 
+    /**
+     * 将TIOPoint映射到4X4的网格中
+     *    7  6     2  3
+     *    5  4     0  1
+     *    13 12    8  9
+     *    15 14   10  11
+     * @param tioPoint
+     * @return hexadecimal index [0-15]
+     */
+    public byte mapZCAX(TIOPoint tioPoint) {
+        TIOPoint p = normalize(tioPoint);
+        //判断所属象限
+        double v = p.getValue() - 0.5;
+        double a = p.getAngle() - 0.5;
+        if (v >= 0 && a >= 0) {//第一象限
+            if (v <= 0.25 && a <= 0.25) {
+                return 6;
+            } else if (v <= 0.25 && a > 0.25) {
+                return 7;
+            } else if (v > 0.25 && a <= 0.25) {
+                return 4;
+            } else {
+                return 3;
+            }
+        } else if (v >= 0 && a < 0) { //第二象限
+            if (v <= 0.25 && a >= -0.25) {
+                return 3;
+            } else if (v <= 0.25 && a < -0.25) {
+                return 2;
+            } else if (v > 0.25 && a >= -0.25) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } else if (v < 0 && a < 0) {//第三象限
+            if (v >= -0.25 && a >= -0.25) {
+                return 9;
+            } else if (v >= -0.25 && a < -0.25) {
+                return 8;
+            } else if (v < -0.25 && a >= -0.25) {
+                return 11;
+            } else {
+                return 10;
+            }
+        } else {//第四象限
+            if (v >= -0.25 && a <= 0.25) {
+                return 12;
+            } else if (v >= -0.25 && a > 0.25) {
+                return 13;
+            } else if (v < -0.25 && a <= 0.25) {
+                return 14;
+            } else {
+                return 15;
+            }
+        }
+    }
 
     /**
      * @param tioPoints
@@ -210,11 +266,36 @@ public class TIOPlane implements Storable {
     }
 
     /**
+     * @param tioPoints
+     * @return
+     */
+    public byte[] mapZCAX(TIOPoints tioPoints) {
+        int s = tioPoints.size();
+        byte[] bytes = new byte[s];
+        s = 0;
+        for (TIOPoint p : tioPoints) {
+            bytes[s] = mapZCAX(p);
+            s++;
+        }
+        return bytes;
+    }
+
+    /**
      * @param s
      * @param paaSize
      * @return
      */
     public byte[] mapHAX(Series s, int paaSize) {
+        TIOPoints tioPoints = cn.edu.cug.cs.gtl.series.common.pax.Utils.pax(s, paaSize);
+        return mapHAX(tioPoints);
+    }
+
+    /**
+     * @param s
+     * @param paaSize
+     * @return
+     */
+    public byte[] mapZCAX(Series s, int paaSize) {
         TIOPoints tioPoints = cn.edu.cug.cs.gtl.series.common.pax.Utils.pax(s, paaSize);
         return mapHAX(tioPoints);
     }
