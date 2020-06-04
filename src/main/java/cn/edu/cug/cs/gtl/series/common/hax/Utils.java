@@ -58,7 +58,7 @@ public class Utils {
             int y1 = a % 2;
             int x2 = b / 2;
             int y2 = b % 2;
-            return Math.sqrt((y1 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
+            return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
         } else {//2 如果不在同一个象限,采用网格距离+最大象限内距离sqrt(2)
             int[] h1xy = toGridXY(h1);
             int[] h2xy = toGridXY(h2);

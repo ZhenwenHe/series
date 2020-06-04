@@ -185,7 +185,7 @@ public class TIOPlane implements Storable {
                 return 8;
             } else if (v >= -0.25 && a > 0.25) {
                 return 9;
-            } else if (v < -0.25 && a < -0.25) {
+            } else if (v < -0.25 && a <= 0.25) {
                 return 10;
             } else {
                 return 11;

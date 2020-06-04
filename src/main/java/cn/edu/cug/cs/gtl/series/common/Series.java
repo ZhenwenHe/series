@@ -17,7 +17,6 @@ import java.util.List;
 
 public class Series implements Storable {
 
-
     private static final long serialVersionUID = -1765975818686067145L;
 
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
