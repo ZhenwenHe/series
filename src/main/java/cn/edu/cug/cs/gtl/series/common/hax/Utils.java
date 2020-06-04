@@ -18,7 +18,7 @@ public class Utils {
      * query processing.
      */
     public static byte[] hax(Series ts, int w, TIOPlane tioPlane) {
-        return tioPlane.map(ts, w);
+        return tioPlane.mapHAX(ts, w);
     }
 
     /**
@@ -31,7 +31,7 @@ public class Utils {
      */
     public static byte[] hax(Series ts, int w) {
         TIOPlane tioPlane = TIOPlane.of(ts.min(), ts.max());
-        return tioPlane.map(ts, w);
+        return tioPlane.mapHAX(ts, w);
     }
 
     /**

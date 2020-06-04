@@ -145,7 +145,7 @@ public class TIOPlane implements Storable {
      * @param tioPoint
      * @return hexadecimal index [0-15]
      */
-    public byte map(TIOPoint tioPoint) {
+    public byte mapHAX(TIOPoint tioPoint) {
         TIOPoint p = normalize(tioPoint);
         //判断所属象限
         double v = p.getValue() - 0.5;
@@ -198,12 +198,12 @@ public class TIOPlane implements Storable {
      * @param tioPoints
      * @return
      */
-    public byte[] map(TIOPoints tioPoints) {
+    public byte[] mapHAX(TIOPoints tioPoints) {
         int s = tioPoints.size();
         byte[] bytes = new byte[s];
         s = 0;
         for (TIOPoint p : tioPoints) {
-            bytes[s] = map(p);
+            bytes[s] = mapHAX(p);
             s++;
         }
         return bytes;
@@ -214,9 +214,9 @@ public class TIOPlane implements Storable {
      * @param paaSize
      * @return
      */
-    public byte[] map(Series s, int paaSize) {
+    public byte[] mapHAX(Series s, int paaSize) {
         TIOPoints tioPoints = cn.edu.cug.cs.gtl.series.common.pax.Utils.pax(s, paaSize);
-        return map(tioPoints);
+        return mapHAX(tioPoints);
     }
 
     /**
