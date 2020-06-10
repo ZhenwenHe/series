@@ -3,7 +3,6 @@ package cn.edu.cug.cs.gtl.series.dimensionality;
 import cn.edu.cug.cs.gtl.series.common.paa.Utils;
 import cn.edu.cug.cs.gtl.geom.Vector;
 import cn.edu.cug.cs.gtl.series.common.Series;
-import cn.edu.cug.cs.gtl.series.common.TimeSeries;
 import cn.edu.cug.cs.gtl.series.common.pax.TIOPoints;
 
 public class DimensionalityUtils {
@@ -23,7 +22,7 @@ public class DimensionalityUtils {
      * col(0) is the x-axis values
      * col(1) is the y-axis values
      */
-    public static TimeSeries paa(TimeSeries a, long w) {
+    public static Series paa(Series a, long w) {
         return cn.edu.cug.cs.gtl.series.common.paa.Utils.paa(a, w);
     }
 
@@ -66,17 +65,7 @@ public class DimensionalityUtils {
         return cn.edu.cug.cs.gtl.series.common.sax.Utils.sax(s, paaSize, alphabet);
     }
 
-    /**
-     * Approximate the time series using SAX.
-     *
-     * @param s
-     * @param paaSize
-     * @param alphabet
-     * @return
-     */
-    public static char[] sax(TimeSeries s, int paaSize, int alphabet) {
-        return cn.edu.cug.cs.gtl.series.common.sax.Utils.sax(s, paaSize, alphabet);
-    }
+
 
 
     /**
@@ -86,7 +75,7 @@ public class DimensionalityUtils {
      * @param paaSize
      * @return
      */
-    public static TIOPoints pax(TimeSeries s, int paaSize) {
+    public static TIOPoints pax(Series s, int paaSize) {
         return cn.edu.cug.cs.gtl.series.common.pax.Utils.pax(s, paaSize);
     }
 
@@ -97,7 +86,7 @@ public class DimensionalityUtils {
      * @param paaSize
      * @return
      */
-    public static byte[] hax(TimeSeries s, int paaSize) {
+    public static byte[] hax(Series s, int paaSize) {
         return cn.edu.cug.cs.gtl.series.common.hax.Utils.hax(s, paaSize);
     }
 

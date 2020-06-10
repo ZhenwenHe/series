@@ -1,6 +1,6 @@
 package cn.edu.cug.cs.gtl.series.distances;
 
-import cn.edu.cug.cs.gtl.series.common.TimeSeries;
+import cn.edu.cug.cs.gtl.series.common.Series;
 import cn.edu.cug.cs.gtl.ml.distances.DistanceMetrics;
 
 public class EuclideanDistanceMetrics<T> implements DistanceMetrics<T> {
@@ -9,8 +9,8 @@ public class EuclideanDistanceMetrics<T> implements DistanceMetrics<T> {
 
     @Override
     public double distance(T a, T b) {
-        if (a instanceof TimeSeries && b instanceof TimeSeries) {
-            return DistanceUtils.euclidean((TimeSeries) a, (TimeSeries) b);
+        if (a instanceof Series && b instanceof Series) {
+            return DistanceUtils.euclidean((Series) a, (Series) b);
         } else {
             System.out.println("Error");
             return Double.MAX_VALUE;

@@ -6,7 +6,8 @@ import cn.edu.cug.cs.gtl.ml.classification.NNClassifier;
 import cn.edu.cug.cs.gtl.ml.distances.DistanceMetrics;
 import cn.edu.cug.cs.gtl.series.classification.Classification;
 import cn.edu.cug.cs.gtl.series.common.MultiSeries;
-import cn.edu.cug.cs.gtl.series.common.TimeSeries;
+import cn.edu.cug.cs.gtl.series.common.Series;
+import cn.edu.cug.cs.gtl.series.common.SeriesBuilder;
 import cn.edu.cug.cs.gtl.series.common.pax.TIOPlane;
 import cn.edu.cug.cs.gtl.series.distances.*;
 import jxl.Workbook;
@@ -60,13 +61,13 @@ public class Main {
         try {
 
 
-            MultiSeries trainMultiSeries = MultiSeries.readTSV(trainFilePath);
-            MultiSeries testMultiSeries = MultiSeries.readTSV(testFilePath);
+            MultiSeries trainMultiSeries = SeriesBuilder.readTSV(trainFilePath);
+            MultiSeries testMultiSeries = SeriesBuilder.readTSV(testFilePath);
 
             TIOPlane tioPlane = TIOPlane.of(Math.min(trainMultiSeries.min(), testMultiSeries.min()),
                     Math.max(trainMultiSeries.max(), testMultiSeries.max()));
 
-            HaxDistanceMetrics<TimeSeries> disFunc = new HaxDistanceMetrics<>(10, tioPlane);
+            HaxDistanceMetrics<Series> disFunc = new HaxDistanceMetrics<>(10, tioPlane);
             System.out.println(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,10 +82,10 @@ public class Main {
         logger.addAppender(appender);
         try {
 
-            MultiSeries trainMultiSeries = MultiSeries.readTSV(trainFilePath);
-            MultiSeries testMultiSeries = MultiSeries.readTSV(testFilePath);
+            MultiSeries trainMultiSeries = SeriesBuilder.readTSV(trainFilePath);
+            MultiSeries testMultiSeries = SeriesBuilder.readTSV(testFilePath);
 
-            SaxDistanceMetrics<TimeSeries> disFunc = new SaxDistanceMetrics<>(10, 16);
+            SaxDistanceMetrics<Series> disFunc = new SaxDistanceMetrics<>(10, 16);
             //System.out.println(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
             logger.info(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
         } catch (Exception e) {
@@ -95,10 +96,10 @@ public class Main {
 
     public void timeSeriesClassifier_esax() throws Exception {
         try {
-            MultiSeries trainMultiSeries = MultiSeries.readTSV(trainFilePath);
-            MultiSeries testMultiSeries = MultiSeries.readTSV(testFilePath);
+            MultiSeries trainMultiSeries = SeriesBuilder.readTSV(trainFilePath);
+            MultiSeries testMultiSeries = SeriesBuilder.readTSV(testFilePath);
 
-            ESaxDistanceMetrics<TimeSeries> disFunc = new ESaxDistanceMetrics<>(10, 16);
+            ESaxDistanceMetrics<Series> disFunc = new ESaxDistanceMetrics<>(10, 16);
             System.out.println(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
             //logger.info(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
         } catch (Exception e) {
@@ -110,10 +111,10 @@ public class Main {
     public void timeSeriesClassifier_euclidean() {
         try {
 
-            MultiSeries trainMultiSeries = MultiSeries.readTSV(trainFilePath);
-            MultiSeries testMultiSeries = MultiSeries.readTSV(testFilePath);
+            MultiSeries trainMultiSeries = SeriesBuilder.readTSV(trainFilePath);
+            MultiSeries testMultiSeries = SeriesBuilder.readTSV(testFilePath);
 
-            EuclideanDistanceMetrics<TimeSeries> disFunc = new EuclideanDistanceMetrics<>();
+            EuclideanDistanceMetrics<Series> disFunc = new EuclideanDistanceMetrics<>();
             System.out.println(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,10 +125,10 @@ public class Main {
     public void timeSeriesClassifier_dtw() {
         try {
 
-            MultiSeries trainMultiSeries = MultiSeries.readTSV(trainFilePath);
-            MultiSeries testMultiSeries = MultiSeries.readTSV(testFilePath);
+            MultiSeries trainMultiSeries = SeriesBuilder.readTSV(trainFilePath);
+            MultiSeries testMultiSeries = SeriesBuilder.readTSV(testFilePath);
 
-            DTWDistanceMetrics<TimeSeries> disFunc = new DTWDistanceMetrics<>();
+            DTWDistanceMetrics<Series> disFunc = new DTWDistanceMetrics<>();
             System.out.println(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,14 +139,14 @@ public class Main {
     public void timeSeries_i0_j1() {
         try {
 
-            MultiSeries trainMultiSeries = MultiSeries.readTSV(trainFilePath);
-            MultiSeries testMultiSeries = MultiSeries.readTSV(testFilePath);
+            MultiSeries trainMultiSeries = SeriesBuilder.readTSV(trainFilePath);
+            MultiSeries testMultiSeries = SeriesBuilder.readTSV(testFilePath);
 
             for (int i = 0; i < 100; ++i) {
-                TimeSeries si = testMultiSeries.getSeries(i);
+                Series si = testMultiSeries.getSeries(i);
                 // si.print();
                 for (int j = 0; j < 100; ++j) {
-                    TimeSeries sj = trainMultiSeries.getSeries(j);
+                    Series sj = trainMultiSeries.getSeries(j);
                     //sj.print();
                     double s = DistanceUtils.sax(si, sj, 10, 8);
                     System.out.println(i);
@@ -187,14 +188,14 @@ public class Main {
 
         for (int k = 0; k < pathSize; k++) {
             try {
-                MultiSeries trainMultiSeries = MultiSeries.readTSV(trainPathList.get(k));
-                MultiSeries testMultiSeries = MultiSeries.readTSV(testPathList.get(k));
+                MultiSeries trainMultiSeries = SeriesBuilder.readTSV(trainPathList.get(k));
+                MultiSeries testMultiSeries = SeriesBuilder.readTSV(testPathList.get(k));
 
 
                 TIOPlane tioPlane = TIOPlane.of(Math.min(trainMultiSeries.min(), testMultiSeries.min()),
                         Math.max(trainMultiSeries.max(), testMultiSeries.max()));
 
-                HaxDistanceMetrics<TimeSeries> disFunc = new HaxDistanceMetrics<>(10, tioPlane);
+                HaxDistanceMetrics<Series> disFunc = new HaxDistanceMetrics<>(10, tioPlane);
                 dtwList.add(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
                 System.out.println(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
             } catch (Exception e) {
@@ -240,10 +241,10 @@ public class Main {
             System.out.print(nameList.get(k) + "\t");
             for (int w = 5; w < 21; w++) {
                 try {
-                    MultiSeries trainMultiSeries = MultiSeries.readTSV(trainPathList.get(k));
-                    MultiSeries testMultiSeries = MultiSeries.readTSV(testPathList.get(k));
+                    MultiSeries trainMultiSeries = SeriesBuilder.readTSV(trainPathList.get(k));
+                    MultiSeries testMultiSeries = SeriesBuilder.readTSV(testPathList.get(k));
 
-                    SaxTGDistanceMetrics<TimeSeries> disFunc = new SaxTGDistanceMetrics<>(w, alphabet);
+                    SaxTGDistanceMetrics<Series> disFunc = new SaxTGDistanceMetrics<>(w, alphabet);
                     System.out.print(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc) + "\t");
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -282,13 +283,13 @@ public class Main {
         System.out.println("w = " + w + "        " + "alphabet = " + alphabet);
         for (int k = 0; k < pathSize; k++) {
             try {
-                MultiSeries trainMultiSeries = MultiSeries.readTSV(trainPathList.get(k));
-                MultiSeries testMultiSeries = MultiSeries.readTSV(testPathList.get(k));
+                MultiSeries trainMultiSeries = SeriesBuilder.readTSV(trainPathList.get(k));
+                MultiSeries testMultiSeries = SeriesBuilder.readTSV(testPathList.get(k));
 
-                SaxDistanceMetrics<TimeSeries> disFunc = new SaxDistanceMetrics<>(w, alphabet);
-                SaxTDDistanceMetrics<TimeSeries> disFunc1 = new SaxTDDistanceMetrics<>(w, alphabet);
-                SaxTGDistanceMetrics<TimeSeries> disFunc2 = new SaxTGDistanceMetrics<>(w, alphabet);
-                ESaxDistanceMetrics<TimeSeries> disFunc3 = new ESaxDistanceMetrics<>(w, alphabet);
+                SaxDistanceMetrics<Series> disFunc = new SaxDistanceMetrics<>(w, alphabet);
+                SaxTDDistanceMetrics<Series> disFunc1 = new SaxTDDistanceMetrics<>(w, alphabet);
+                SaxTGDistanceMetrics<Series> disFunc2 = new SaxTGDistanceMetrics<>(w, alphabet);
+                ESaxDistanceMetrics<Series> disFunc3 = new ESaxDistanceMetrics<>(w, alphabet);
                 System.out.print(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc) + "        ");
                 System.out.print(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc1) + "        ");
                 System.out.print(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc2) + "        ");
@@ -325,10 +326,10 @@ public class Main {
 
         for (int k = 0; k < pathSize; k++) {
             try {
-                MultiSeries trainMultiSeries = MultiSeries.readTSV(trainPathList.get(k));
-                MultiSeries testMultiSeries = MultiSeries.readTSV(testPathList.get(k));
+                MultiSeries trainMultiSeries = SeriesBuilder.readTSV(trainPathList.get(k));
+                MultiSeries testMultiSeries = SeriesBuilder.readTSV(testPathList.get(k));
 
-                SaxTGDistanceMetrics<TimeSeries> disFunc = new SaxTGDistanceMetrics<>(20, 16);
+                SaxTGDistanceMetrics<Series> disFunc = new SaxTGDistanceMetrics<>(20, 16);
                 System.out.println(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -361,13 +362,13 @@ public class Main {
 
         for (int k = 0; k < pathSize; k++) {
             try {
-                MultiSeries trainMultiSeries = MultiSeries.readTSV(trainPathList.get(k));
-                MultiSeries testMultiSeries = MultiSeries.readTSV(testPathList.get(k));
+                MultiSeries trainMultiSeries = SeriesBuilder.readTSV(trainPathList.get(k));
+                MultiSeries testMultiSeries = SeriesBuilder.readTSV(testPathList.get(k));
 
                 TIOPlane tioPlane = TIOPlane.of(Math.min(trainMultiSeries.min(), testMultiSeries.min()),
                         Math.max(trainMultiSeries.max(), testMultiSeries.max()));
 
-                HaxDistanceMetrics<TimeSeries> disFunc = new HaxDistanceMetrics<>(10, tioPlane);
+                HaxDistanceMetrics<Series> disFunc = new HaxDistanceMetrics<>(10, tioPlane);
                 haxList.add(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
                 System.out.println(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
             } catch (Exception e) {
@@ -404,10 +405,10 @@ public class Main {
 
         for (int k = 0; k < pathSize; k++) {
             try {
-                MultiSeries trainMultiSeries = MultiSeries.readTSV(trainPathList.get(k));
-                MultiSeries testMultiSeries = MultiSeries.readTSV(testPathList.get(k));
+                MultiSeries trainMultiSeries = SeriesBuilder.readTSV(trainPathList.get(k));
+                MultiSeries testMultiSeries = SeriesBuilder.readTSV(testPathList.get(k));
 
-                EuclideanDistanceMetrics<TimeSeries> disFunc = new EuclideanDistanceMetrics<>();
+                EuclideanDistanceMetrics<Series> disFunc = new EuclideanDistanceMetrics<>();
                 System.out.println(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
 
             } catch (Exception e) {
@@ -452,10 +453,10 @@ public class Main {
             String log = "";
             for (int w = 5; w < 21; w++) {
                 try {
-                    MultiSeries trainMultiSeries = MultiSeries.readTSV(trainPathList.get(k));
-                    MultiSeries testMultiSeries = MultiSeries.readTSV(testPathList.get(k));
+                    MultiSeries trainMultiSeries = SeriesBuilder.readTSV(trainPathList.get(k));
+                    MultiSeries testMultiSeries = SeriesBuilder.readTSV(testPathList.get(k));
 
-                    ESaxDistanceMetrics<TimeSeries> disFunc = new ESaxDistanceMetrics<>(w, alphabet);
+                    ESaxDistanceMetrics<Series> disFunc = new ESaxDistanceMetrics<>(w, alphabet);
                     String res = String.valueOf(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
                     log += res + " ";
                 } catch (Exception e) {
@@ -512,13 +513,13 @@ public class Main {
     }
 
 
-    public static double oneNNClassifier(MultiSeries trainTimeSeries, MultiSeries testTimeSeries, DistanceMetrics<TimeSeries> disfunc) {
-        NNClassifier<TimeSeries, String> classifier = new NNClassifier<>(trainTimeSeries.toTrainSet(), testTimeSeries.toTestSet(), disfunc);
+    public static double oneNNClassifier(MultiSeries trainTimeSeries, MultiSeries testTimeSeries, DistanceMetrics<Series> disfunc) {
+        NNClassifier<Series, String> classifier = new NNClassifier<>(trainTimeSeries.toTrainSet(), testTimeSeries.toTestSet(), disfunc);
         return classifier.score();
     }
 
-    public static double kNNClassifier(MultiSeries trainTimeSeries, MultiSeries testTimeSeries, DistanceMetrics<TimeSeries> disfunc) {
-        KNNClassifier<TimeSeries, String> classifier = new KNNClassifier<>(trainTimeSeries.toTrainSet(), testTimeSeries.toTestSet(), disfunc);
+    public static double kNNClassifier(MultiSeries trainTimeSeries, MultiSeries testTimeSeries, DistanceMetrics<Series> disfunc) {
+        KNNClassifier<Series, String> classifier = new KNNClassifier<>(trainTimeSeries.toTrainSet(), testTimeSeries.toTestSet(), disfunc);
         return classifier.score();
     }
 
@@ -556,10 +557,10 @@ public class Main {
         int pathSize = pathList.size() / 2;
         for (int k = 0; k < pathSize; k++) {
             try {
-                MultiSeries trainMultiSeries = MultiSeries.readTSV(trainPathList.get(k));
-                MultiSeries testMultiSeries = MultiSeries.readTSV(testPathList.get(k));
+                MultiSeries trainMultiSeries = SeriesBuilder.readTSV(trainPathList.get(k));
+                MultiSeries testMultiSeries = SeriesBuilder.readTSV(testPathList.get(k));
 
-                SaxDistanceMetrics<TimeSeries> disFunc = new SaxDistanceMetrics<>(10, 9);
+                SaxDistanceMetrics<Series> disFunc = new SaxDistanceMetrics<>(10, 9);
                 saxList.add(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
                 System.out.println(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
             } catch (Exception e) {
@@ -576,13 +577,13 @@ public class Main {
         WritableSheet sheet = workbook.createSheet("sheet1", 0);
         for (int k = 0; k < pathSize; k++) {
             try {
-                MultiSeries trainMultiSeries = MultiSeries.readTSV(trainPathList.get(k));
-                MultiSeries testMultiSeries = MultiSeries.readTSV(testPathList.get(k));
+                MultiSeries trainMultiSeries = SeriesBuilder.readTSV(trainPathList.get(k));
+                MultiSeries testMultiSeries = SeriesBuilder.readTSV(testPathList.get(k));
 
                 TIOPlane tioPlane = TIOPlane.of(Math.min(trainMultiSeries.min(), testMultiSeries.min()),
                         Math.max(trainMultiSeries.max(), testMultiSeries.max()));
 
-                HaxDistanceMetrics<TimeSeries> disFunc = new HaxDistanceMetrics<>(10, tioPlane);
+                HaxDistanceMetrics<Series> disFunc = new HaxDistanceMetrics<>(10, tioPlane);
                 haxList.add(Classification.timeSeriesClassifier(trainMultiSeries, testMultiSeries, disFunc));
                 dis = new Label(1, k, String.valueOf(haxList.get(k)));
                 sheet.addCell(dis);

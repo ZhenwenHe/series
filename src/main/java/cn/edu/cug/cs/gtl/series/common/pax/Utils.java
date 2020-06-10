@@ -4,7 +4,6 @@ package cn.edu.cug.cs.gtl.series.common.pax;
 import cn.edu.cug.cs.gtl.array.Array;
 import cn.edu.cug.cs.gtl.series.common.MultiSeries;
 import cn.edu.cug.cs.gtl.series.common.Series;
-import cn.edu.cug.cs.gtl.series.common.TimeSeries;
 import org.apache.commons.math3.fitting.PolynomialCurveFitter;
 import org.apache.commons.math3.fitting.WeightedObservedPoint;
 
@@ -36,25 +35,8 @@ public class Utils {
      * @return
      */
     private static TIOPoint subseriesToTIOPoint(Series s) {
-        double[] xs = null;
-        double[] ys = null;
-        if (s instanceof TimeSeries) {
-            TimeSeries ts = (TimeSeries) s;
-            xs = ts.getDataX();
-            ys = ts.getDataY();
-        } else if (s instanceof MultiSeries) {
-            MultiSeries ms = (MultiSeries) s;
-            TimeSeries ts = ms.getSeries(0);
-            xs = ts.getDataX();
-            ys = ts.getDataY();
-        } else {
-            ys = s.getValues();
-            xs = new double[ys.length];
-            for (int i = 0; i < xs.length; ++i)
-                xs[i] = i;
-        }
-        assert xs != null;
-        assert ys != null;
+        double[] xs = s.getDataX();
+        double[] ys = s.getDataY();
         return new TIOPoint(calculateAngle(xs, ys), Series.mean(ys));
     }
 

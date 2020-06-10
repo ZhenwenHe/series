@@ -1,21 +1,56 @@
 package cn.edu.cug.cs.gtl.series.common;
 
 import cn.edu.cug.cs.gtl.io.Storable;
+import cn.edu.cug.cs.gtl.protos.TSPoint;
+import cn.edu.cug.cs.gtl.protos.Timestamp;
+import cn.edu.cug.cs.gtl.protos.Value;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class Point implements Storable {
 
     private static final long serialVersionUID = 8942132755757422844L;
 
-    private String measurement;
-    private Map<String,String> tags= new TreeMap<String,String>();
-    private Map<String,Object> fields= new TreeMap<String,Object>();
+    private TSPoint tsPoint =null;
 
+    public static PointBuilder newBuilder(){
+        return new PointBuilder();
+    }
+
+    private Point(){
+
+    }
+
+    protected Point(TSPoint tsPoint){
+        this.tsPoint=tsPoint;
+    }
+
+    public String getMeasurement( ){
+        return tsPoint.getMeasurement();
+    }
+
+    public Value  getFieldValue(String key){
+        return tsPoint.getFieldMap().get(key);
+    }
+
+    public String getTagValue(String key){
+        return tsPoint.getTagMap().get(key);
+    }
+
+    public Timestamp getTimestamp(){
+        return tsPoint.getTimestamp();
+    }
+
+    public Map<String, String> getTagMap(){
+        return tsPoint.getTagMap();
+    }
+
+    public Map<String, Value> getFieldMap(){
+        return tsPoint.getFieldMap();
+    }
     /**
      * 对象深拷贝
      *
@@ -23,7 +58,9 @@ public class Point implements Storable {
      */
     @Override
     public Object clone() {
-        return null;
+        Point p = new Point();
+        p.tsPoint = tsPoint.toBuilder().build();
+        return p;
     }
 
     /**
@@ -35,7 +72,11 @@ public class Point implements Storable {
      */
     @Override
     public boolean load(DataInput in) throws IOException {
-        return false;
+        int len = in.readInt();
+        byte[] bs = new byte[len];
+        in.readFully(bs);
+        tsPoint =TSPoint.parseFrom(bs);
+        return true;
     }
 
     /**
@@ -47,6 +88,9 @@ public class Point implements Storable {
      */
     @Override
     public boolean store(DataOutput out) throws IOException {
-        return false;
+        byte[] bs = tsPoint.toByteArray();
+        out.writeInt(bs.length);
+        out.write(bs);
+        return true;
     }
 }

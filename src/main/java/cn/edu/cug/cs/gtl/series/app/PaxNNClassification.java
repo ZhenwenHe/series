@@ -7,7 +7,7 @@ import cn.edu.cug.cs.gtl.ml.dataset.TestSet;
 import cn.edu.cug.cs.gtl.ml.dataset.TrainSet;
 import cn.edu.cug.cs.gtl.series.common.MultiSeries;
 import cn.edu.cug.cs.gtl.series.common.Series;
-import cn.edu.cug.cs.gtl.series.common.TimeSeries;
+import cn.edu.cug.cs.gtl.series.common.SeriesBuilder;
 import cn.edu.cug.cs.gtl.series.common.pax.TIOPlane;
 import cn.edu.cug.cs.gtl.series.distances.HaxDistanceMetrics;
 import cn.edu.cug.cs.gtl.series.distances.PaxDistanceMetrics;
@@ -28,18 +28,18 @@ public class PaxNNClassification {
             for (Pair<String, String> p : config.getDataFiles()) {
                 String name = File.getFileNameWithoutSuffix(p.first());
                 name = name.substring(0, name.indexOf('_'));
-                MultiSeries train = Series.readTSV(p.first());
-                MultiSeries test = Series.readTSV(p.second());
-                TrainSet<TimeSeries, String> trainSet = train.toTrainSet();
-                TestSet<TimeSeries, String> testSet = test.toTestSet();
+                MultiSeries train = SeriesBuilder.readTSV(p.first());
+                MultiSeries test = SeriesBuilder.readTSV(p.second());
+                TrainSet<Series, String> trainSet = train.toTrainSet();
+                TestSet<Series, String> testSet = test.toTestSet();
                 TIOPlane tioPlane = TIOPlane.of(Math.min(train.min(), test.min()),
                         Math.max(train.max(), test.max()));
                 Pair<Integer, Integer> paaSizeRange = config.getPaaSizeRange();
                 double[] r = new double[n];
                 k = 0;
                 for (int i = paaSizeRange.first(); i < paaSizeRange.second(); ++i) {
-                    PaxDistanceMetrics<TimeSeries> disFunc = new PaxDistanceMetrics<>(i, tioPlane);
-                    NNClassifier<TimeSeries, String> nnClassifier = new NNClassifier<>(trainSet, testSet, disFunc);
+                    PaxDistanceMetrics<Series> disFunc = new PaxDistanceMetrics<>(i, tioPlane);
+                    NNClassifier<Series, String> nnClassifier = new NNClassifier<>(trainSet, testSet, disFunc);
                     r[k] = nnClassifier.score();
                     k++;
                 }

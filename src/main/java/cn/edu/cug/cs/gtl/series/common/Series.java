@@ -1,148 +1,81 @@
 package cn.edu.cug.cs.gtl.series.common;
 
-import cn.edu.cug.cs.gtl.series.common.sax.SAXException;
-import cn.edu.cug.cs.gtl.io.File;
-import cn.edu.cug.cs.gtl.io.FileDataSplitter;
+import cn.edu.cug.cs.gtl.protos.TSSeries;
+import cn.edu.cug.cs.gtl.protos.Timestamp;
+import cn.edu.cug.cs.gtl.protos.Value;
 import cn.edu.cug.cs.gtl.io.Storable;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Map;
+/**
+ * 表示一对序列数据，包含X轴和Y轴，对于时序数据而言，
+ * X轴表示时间，Y轴表示序列值，
+ * 当X轴的数据为空的时候，则表示X是一个由0开始，步长为1的一个递增序列，器长度与Y轴一致
+ */
 public class Series implements Storable {
 
     private static final long serialVersionUID = -1765975818686067145L;
 
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
-    protected double[] data;
+    protected TSSeries tsSeries=null;
 
-    /**
-     * 从TSV文件中读取数据构建时序数据集合
-     *
-     * @param name 时序数据文件名
-     * @return
-     * @throws IOException
-     */
-    public static MultiSeries readTSV(String name) throws IOException {
-        File f = new File(name);
-        BufferedReader br = new BufferedReader(new FileReader(f));
-        String line = br.readLine();
-        int length = 0;
-        List<double[]> yss = new ArrayList<>();
-        List<String> labels = new ArrayList<>();
-        while (line != null) {
-            //读取一行，以\t分隔
-            String[] columns = line.split(FileDataSplitter.TSV.getDelimiter());
-            length = columns.length - 1;
-            double[] ys = new double[length];
-            //第一个元素为标签
-            String label = columns[0];
-            //接下来的元素为时序值
-            for (int i = 1; i < columns.length; ++i) {
-                ys[i - 1] = Double.parseDouble(columns[i]);
-            }
-            yss.add(ys);
-            labels.add(label);
-            line = br.readLine();
-        }
-        double[] xs = new double[length];
-        for (int i = 0; i < length; ++i)
-            xs[i] = i;
-
-        MultiSeries ms = new MultiSeries(xs, yss);
-        ms.labels = labels;
-        return ms;
+    protected Series(TSSeries s){
+        tsSeries=s;
     }
 
-    /**
-     * 从NSV文件中读取数据构建时序数据集合，所谓的NSV文件是以换行符为分隔的文件
-     * ，也就是只有一列的CSV文件。
-     * NSV is that file has a single double value on every line.
-     *
-     * @param fileName  时序数据文件名
-     * @param columnIdx 从columnIdx开始读，下标从0开始
-     * @param sizeLimit 总共读取sizeLimit行，0=all
-     * @return 数据序列
-     * @throws IOException
-     */
-    public static Series readNSV(String fileName, int columnIdx, int sizeLimit)
-            throws IOException, SAXException {
-        Path path = Paths.get(fileName);
-        if (!(Files.exists(path))) {
-            throw new SAXException("unable to load data - data source not found.");
-        }
-        BufferedReader reader = Files.newBufferedReader(path, DEFAULT_CHARSET);
-        double[] ds = readNSV(reader, columnIdx, sizeLimit);
-        return of(ds);
+    public String getMeasurement(){
+        return tsSeries.getMeasurement();
     }
 
-    /**
-     * 从NSV文件中读取数据构建时序数据集合，所谓的NSV文件是以换行符为分隔的文件
-     * ，也就是只有一列的CSV文件。
-     * NSV is that file has a single double value on every line.
-     *
-     * @param fileName 时序数据文件名
-     * @return 数据序列
-     * @throws IOException
-     */
-    public static Series readNSV(String fileName)
-            throws IOException, SAXException {
-        return readNSV(fileName, 0, 0);
+    public String getFieldKey(){
+        return tsSeries.getFieldKey();
     }
 
-    /**
-     * 从NSV文件中读取数据构建时序数据集合，所谓的NSV文件是以换行符为分隔的文件
-     * ，也就是只有一列的CSV文件。
-     * NSV is that file has a single double value on every line.
-     *
-     * @param br        时序数据文件名
-     * @param columnIdx 从columnIdx开始读，下标从0开始
-     * @param sizeLimit 总共读取sizeLimit行
-     * @return 数据序列的数组
-     * @throws IOException
-     */
-    public static double[] readNSV(BufferedReader br, int columnIdx, int sizeLimit)
-            throws IOException, SAXException, NumberFormatException {
-        ArrayList<Double> preRes = new ArrayList<Double>();
-        int lineCounter = 0;
-
-        String line = null;
-        while ((line = br.readLine()) != null) {
-            String[] split = line.trim().split("\\s+");
-            if (split.length < columnIdx) {
-                String message = "Unable to read data from column " + columnIdx;
-                br.close();
-                throw new SAXException(message);
-            }
-            String str = split[columnIdx];
-            double num = Double.NaN;
-            try {
-                num = Double.valueOf(str);
-            } catch (NumberFormatException e) {
-                throw new NumberFormatException("error in  the row " + lineCounter + " with value \"" + str + "\"");
-            }
-
-            preRes.add(num);
-            lineCounter++;
-            if ((0 != sizeLimit) && (lineCounter >= sizeLimit)) {
-                break;
-            }
-        }
-        br.close();
-        double[] res = new double[preRes.size()];
-        for (int i = 0; i < preRes.size(); i++) {
-            res[i] = preRes.get(i);
-        }
-        return res;
+    public List<Value> getFieldValues(){
+        return tsSeries.getFieldValueList();
     }
 
+    public Map<String,String> getTagMap(){
+        return tsSeries.getTagMap();
+    }
+
+    public List<Timestamp> getTimeValues(){
+        return tsSeries.getTimeValueList();
+    }
+
+    public double[] getDataX() {
+        List<Timestamp> l = getTimeValues();
+        int i=0;
+        if(l==null || l.size()==0){
+            double [] xData = new double[tsSeries.getFieldValueCount()];
+            for(i=0;i<xData.length;++i){
+                xData[i]=i;
+            }
+            return xData;
+        }
+        else{
+            double [] xData = new double[tsSeries.getTimeValueCount()];
+            for(Timestamp t: l){
+                xData[i]=t.getTime();
+                ++i;
+            }
+            return xData;
+        }
+    }
+
+    public double[] getDataY() {
+        List<Value> l = getFieldValues();
+        return SeriesBuilder.doubleArray(l);
+    }
+
+    public String getLabel(){
+        return tsSeries.getTagMap().get("label");
+    }
 
     /**
      * Finds the maximal value in series.
@@ -159,6 +92,7 @@ public class Series implements Storable {
         }
         return max;
     }
+
 
     /**
      * Finds the minimal value in series.
@@ -334,121 +268,17 @@ public class Series implements Storable {
     }
 
 
-    Series(double[] data) {
-        assert data != null;
-        this.data = data;
-    }
-
-    Series(float[] data) {
-        assert data != null;
-        this.data = new double[data.length];
-        int i = 0;
-        for (float d : data) {
-            this.data[i] = d;
-            ++i;
-        }
-    }
-
-
-    Series(int[] data) {
-        assert data != null;
-        this.data = new double[data.length];
-        int i = 0;
-        for (int d : data) {
-            this.data[i] = d;
-            ++i;
-        }
-    }
-
-    Series(long[] data) {
-        assert data != null;
-        this.data = new double[data.length];
-        int i = 0;
-        for (long d : data) {
-            this.data[i] = d;
-            ++i;
-        }
-    }
-
     Series() {
-        this.data = null;
-    }
 
-    /**
-     * create a new Series object
-     *
-     * @param data
-     * @return
-     */
-    public static Series of(int[] data) {
-        return new Series(data);
-    }
-
-    /**
-     * create a new Series object
-     *
-     * @param data
-     * @return
-     */
-    public static Series of(long[] data) {
-        return new Series(data);
-    }
-
-    /**
-     * create a new Series object
-     *
-     * @param data
-     * @return
-     */
-    public static Series of(float[] data) {
-        return new Series(data);
-    }
-
-
-    /**
-     * create a new Series object
-     *
-     * @param data
-     * @return
-     */
-    public static Series of(double[] data) {
-        return new Series(data);
-    }
-
-
-    /**
-     * create a new Series Object from a byte array,
-     * this byte array must be generated by storeToByteArray() function
-     *
-     * @param bytes
-     * @return
-     * @throws IOException
-     */
-    public static Series of(byte[] bytes) throws IOException {
-        Series s = new Series();
-        s.loadFromByteArray(bytes);
-        return s;
-    }
-
-    /**
-     * create a new Series Object from a input stream,
-     * it must be generated by write() function
-     *
-     * @param inputStream
-     * @return
-     * @throws IOException
-     */
-    public static Series of(InputStream inputStream) throws IOException {
-        Series s = new Series();
-        s.read(inputStream);
-        return s;
     }
 
     /**
      * @return
      */
     public double[] getValues() {
-        return this.data;
+        List<Value> vs = tsSeries.getFieldValueList();
+        double[] data = SeriesBuilder.doubleArray(vs);
+        return data;
     }
 
     /**
@@ -458,8 +288,10 @@ public class Series implements Storable {
      */
     @Override
     public Object clone() {
-        double[] dat = Arrays.copyOf(this.data, this.data.length);
-        return new Series(dat);
+        TSSeries s0 = tsSeries.toBuilder().build();
+        Series s1 = new Series();
+        s1.tsSeries=s0;
+        return s1;
     }
 
     /**
@@ -473,10 +305,9 @@ public class Series implements Storable {
     public boolean load(DataInput in) throws IOException {
         int s = in.readInt();
         if (s > 0) {
-            this.data = new double[s];
-            for (int i = 0; i < s; ++i) {
-                this.data[i] = in.readDouble();
-            }
+            byte[] bs = new byte[s];
+            in.readFully(bs);
+            tsSeries=TSSeries.parseFrom(bs);
         }
         return true;
     }
@@ -490,20 +321,26 @@ public class Series implements Storable {
      */
     @Override
     public boolean store(DataOutput out) throws IOException {
-        int s = this.data.length;
-        out.writeInt(s);
-        if (s > 0) {
-            for (int i = 0; i < s; ++i)
-                out.writeDouble(this.data[i]);
+
+        int s = 0;//this.data.length;
+        if(tsSeries==null) {
+            out.writeInt(s);
+            return true;
         }
-        return true;
+        else{
+            byte[] bs = tsSeries.toByteArray();
+            s=bs.length;
+            out.writeInt(s);
+            out.write(bs);
+            return true;
+        }
     }
 
     /**
      * @return the count of series in this object
      */
     public long count() {
-        return 0;
+        return 1;
     }
 
 
@@ -513,7 +350,7 @@ public class Series implements Storable {
      * @return
      */
     public long length() {
-        return data == null ? 0 : data.length;
+        return tsSeries == null ? 0 : tsSeries.getFieldValueCount();
     }
 
 
@@ -525,22 +362,30 @@ public class Series implements Storable {
      * @return
      */
     public Series subseries(int paaSize, int paaIndex) {
-        double[] ts = cn.edu.cug.cs.gtl.series.common.paa.Utils.subseries(this.data, paaSize, paaIndex);
-        return Series.of(ts);
+        double [] dataY = getDataY();
+        double[] tsY = cn.edu.cug.cs.gtl.series.common.paa.Utils.subseries(dataY, paaSize, paaIndex);
+        double [] fDataX = getDataX();
+        double[] tsX = cn.edu.cug.cs.gtl.series.common.paa.Utils.subseries(fDataX, paaSize, paaIndex);
+        return new SeriesBuilder()
+                .addValues(tsX,tsY)
+                .setMeasurement(getMeasurement())
+                .setFieldKey(getFieldKey())
+                .addTags(getTagMap())
+                .build();
     }
 
     /**
      * @return
      */
     public double max() {
-        return Series.max(this.data);
+        return Series.max(SeriesBuilder.doubleArray(tsSeries.getFieldValueList()));
     }
 
     /**
      * @return
      */
     public double min() {
-        return Series.min(this.data);
+        return Series.min(SeriesBuilder.doubleArray(tsSeries.getFieldValueList()));
     }
 
 }

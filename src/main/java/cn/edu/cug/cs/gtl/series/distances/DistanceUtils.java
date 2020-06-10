@@ -4,7 +4,6 @@ package cn.edu.cug.cs.gtl.series.distances;
 import cn.edu.cug.cs.gtl.array.Array;
 import cn.edu.cug.cs.gtl.series.common.Series;
 import cn.edu.cug.cs.gtl.series.common.MultiSeries;
-import cn.edu.cug.cs.gtl.series.common.TimeSeries;
 import cn.edu.cug.cs.gtl.series.common.pax.TIOPlane;
 
 import static java.lang.Math.sqrt;
@@ -54,28 +53,6 @@ public class DistanceUtils {
     }
 
     /**
-     * euclidean distance
-     *
-     * @param a time series
-     * @param b time series
-     * @return
-     */
-    public static double euclidean(TimeSeries a, TimeSeries b) {
-        int n = (int) a.length();
-        assert (n == b.length());
-        double[] t1 = a.getDataY();
-        double[] t2 = b.getDataY();
-        double s = 0.0;
-        for (int i = 0; i < n; ++i) {
-            double d = t2[i] - t1[i];
-            d = d * d;
-            s += d;
-        }
-        return sqrt(s);
-    }
-
-
-    /**
      * @param a
      * @param b
      * @param w        the total number of divisions.
@@ -87,17 +64,7 @@ public class DistanceUtils {
         return cn.edu.cug.cs.gtl.series.common.sax.Utils.distance(a, b, w, alphabet);
     }
 
-    /**
-     * @param a
-     * @param b
-     * @param w        the total number of divisions.
-     * @param alphabet is the size of alphabet
-     * @return distance between a and b.
-     * @calculate the sax distance between two time series  a and b
-     */
-    public static double sax(TimeSeries a, TimeSeries b, int w, int alphabet) {
-        return cn.edu.cug.cs.gtl.series.common.sax.Utils.distance(a, b, w, alphabet);
-    }
+
 
     /**
      * the sax distance between two multi time series  a and b
@@ -121,7 +88,7 @@ public class DistanceUtils {
      * @param w
      * @return
      */
-    public static double pax(TimeSeries a, TimeSeries b, int w) {
+    public static double pax(Series a, Series b, int w) {
         return cn.edu.cug.cs.gtl.series.common.pax.Utils.distance(a, b, w);
     }
 
@@ -134,7 +101,7 @@ public class DistanceUtils {
      * @param tioPlane
      * @return
      */
-    public static double pax(TimeSeries a, TimeSeries b, int w, TIOPlane tioPlane) {
+    public static double pax(Series a, Series b, int w, TIOPlane tioPlane) {
         return cn.edu.cug.cs.gtl.series.common.pax.Utils.distance(a, b, w, tioPlane);
     }
 
@@ -157,7 +124,7 @@ public class DistanceUtils {
      * @return distance of hax .
      * @brief calculate the hax distance between two time series a and b
      */
-    public static double hax(TimeSeries a, TimeSeries b, int w) {
+    public static double hax(Series a, Series b, int w) {
         return cn.edu.cug.cs.gtl.series.common.hax.Utils.distance(a, b, w);
     }
 
@@ -169,7 +136,7 @@ public class DistanceUtils {
      * @return distance of hax .
      * @brief calculate the hax distance between two time series a and b
      */
-    public static double hax(TimeSeries a, TimeSeries b, int w, TIOPlane tioPlane) {
+    public static double hax(Series a, Series b, int w, TIOPlane tioPlane) {
         return cn.edu.cug.cs.gtl.series.common.hax.Utils.distance(a, b, w, tioPlane);
     }
 
@@ -195,7 +162,7 @@ public class DistanceUtils {
      * @param alphabet
      * @return
      */
-    public static double esax(TimeSeries a, TimeSeries b, int w, int alphabet) {
+    public static double esax(Series a, Series b, int w, int alphabet) {
         return cn.edu.cug.cs.gtl.series.common.esax.Utils.distance(a, b, w, alphabet);
     }
 
@@ -221,7 +188,7 @@ public class DistanceUtils {
      * @param alphabet
      * @return
      */
-    public static double saxtd(TimeSeries a, TimeSeries b, int w, int alphabet) {
+    public static double saxtd(Series a, Series b, int w, int alphabet) {
         return cn.edu.cug.cs.gtl.series.common.saxtd.Utils.distance(a, b, w, alphabet);
     }
 
@@ -248,7 +215,7 @@ public class DistanceUtils {
      * @param alphabet
      * @return
      */
-    public static double saxtg(TimeSeries a, TimeSeries b, int w, int alphabet) {
+    public static double saxtg(Series a, Series b, int w, int alphabet) {
         return cn.edu.cug.cs.gtl.series.common.saxtg.Utils.distance(a, b, w, alphabet);
     }
 
@@ -270,7 +237,7 @@ public class DistanceUtils {
      * @param b
      * @return
      */
-    public static double dtw(TimeSeries a, TimeSeries b) {
+    public static double dtw(Series a, Series b) {
 
         return -Double.MAX_VALUE;
     }
@@ -298,7 +265,7 @@ public class DistanceUtils {
      * @param alphabet
      * @return
      */
-    public static int hamming(TimeSeries a, TimeSeries b, long w, int alphabet) {
+    public static int hamming(Series a, Series b, long w, int alphabet) {
 //        int n = (int)a.length();
 //        assert (n == b.length());
 //        int[] ar = DimensionalityUtils.sax(a, w, alphabet);
@@ -328,7 +295,7 @@ public class DistanceUtils {
      * @param b
      * @return
      */
-    public static double manhattan(TimeSeries a, TimeSeries b) {
+    public static double manhattan(Series a, Series b) {
         int n = (int) a.length();
         assert (n == b.length());
         double[] t1 = a.getDataY();

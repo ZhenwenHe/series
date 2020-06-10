@@ -7,7 +7,7 @@ import cn.edu.cug.cs.gtl.ml.dataset.TestSet;
 import cn.edu.cug.cs.gtl.ml.dataset.TrainSet;
 import cn.edu.cug.cs.gtl.series.common.MultiSeries;
 import cn.edu.cug.cs.gtl.series.common.Series;
-import cn.edu.cug.cs.gtl.series.common.TimeSeries;
+import cn.edu.cug.cs.gtl.series.common.SeriesBuilder;
 import cn.edu.cug.cs.gtl.series.common.pax.TIOPlane;
 import cn.edu.cug.cs.gtl.series.distances.EuclideanDistanceMetrics;
 import cn.edu.cug.cs.gtl.series.distances.HaxDistanceMetrics;
@@ -29,15 +29,15 @@ public class EuclideanNNClassification {
             for (Pair<String, String> p : config.getDataFiles()) {
                 String name = File.getFileNameWithoutSuffix(p.first());
                 name = name.substring(0, name.indexOf('_'));
-                MultiSeries train = Series.readTSV(p.first());
-                MultiSeries test = Series.readTSV(p.second());
-                TrainSet<TimeSeries, String> trainSet = train.toTrainSet();
-                TestSet<TimeSeries, String> testSet = test.toTestSet();
+                MultiSeries train = SeriesBuilder.readTSV(p.first());
+                MultiSeries test = SeriesBuilder.readTSV(p.second());
+                TrainSet<Series, String> trainSet = train.toTrainSet();
+                TestSet<Series, String> testSet = test.toTestSet();
                 double[] r = new double[n];
                 k = 0;
                 for (int i = 0; i < n; ++i) {
-                    EuclideanDistanceMetrics<TimeSeries> disFunc = new EuclideanDistanceMetrics<>();
-                    NNClassifier<TimeSeries, String> nnClassifier = new NNClassifier<>(trainSet, testSet, disFunc);
+                    EuclideanDistanceMetrics<Series> disFunc = new EuclideanDistanceMetrics<>();
+                    NNClassifier<Series, String> nnClassifier = new NNClassifier<>(trainSet, testSet, disFunc);
                     r[k] = nnClassifier.score();
                     k++;
                 }
