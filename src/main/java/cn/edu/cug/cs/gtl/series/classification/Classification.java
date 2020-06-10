@@ -3,7 +3,7 @@ package cn.edu.cug.cs.gtl.series.classification;
 import cn.edu.cug.cs.gtl.ml.classification.Classifier;
 import cn.edu.cug.cs.gtl.ml.distances.DistanceMetrics;
 import cn.edu.cug.cs.gtl.series.common.MultiSeries;
-import cn.edu.cug.cs.gtl.series.common.TimeSeries;
+import cn.edu.cug.cs.gtl.series.common.Series;
 
 
 import java.util.ArrayList;
@@ -21,8 +21,8 @@ public class Classification {
      */
     public static double classify(MultiSeries trainTimeSeries,
                                   MultiSeries testTimeSeries,
-                                  DistanceMetrics<TimeSeries> distanceMetrics,
-                                  Classifier<TimeSeries, String> classifier) {
+                                  DistanceMetrics<Series> distanceMetrics,
+                                  Classifier<Series, String> classifier) {
         classifier.setDistanceMetrics(distanceMetrics);
         classifier.setTrainSet(trainTimeSeries.toTrainSet());
         classifier.setTestSet(testTimeSeries.toTestSet());
@@ -36,7 +36,7 @@ public class Classification {
      * @param testTimeSeries  multi test time series
      * @return probs accuracy
      */
-    public static double timeSeriesClassifier(MultiSeries trainTimeSeries, MultiSeries testTimeSeries, DistanceMetrics<TimeSeries> disfunc) {
+    public static double timeSeriesClassifier(MultiSeries trainTimeSeries, MultiSeries testTimeSeries, DistanceMetrics<Series> disfunc) {
         int trainDataLen = trainTimeSeries.getLabels().size();
         int testDataLen = testTimeSeries.getLabels().size();
 
@@ -45,10 +45,10 @@ public class Classification {
         String label = "";
         int pos = 0;
         for (int i = 0; i < testDataLen; i++) {
-            TimeSeries testSeries = testTimeSeries.getSeries(i);
+            Series testSeries = testTimeSeries.getSeries(i);
             minDis = Double.MAX_VALUE;
             for (int j = 0; j < trainDataLen; j++) {
-                TimeSeries trainSeries = trainTimeSeries.getSeries(j);
+                Series trainSeries = trainTimeSeries.getSeries(j);
                 double tempDis = disfunc.distance(trainSeries, testSeries);
                 if (tempDis < minDis) {
                     minDis = tempDis;

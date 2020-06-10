@@ -1,6 +1,6 @@
 package cn.edu.cug.cs.gtl.series.distances;
 
-import cn.edu.cug.cs.gtl.series.common.TimeSeries;
+import cn.edu.cug.cs.gtl.series.common.Series;
 import cn.edu.cug.cs.gtl.ml.distances.DistanceMetrics;
 
 public class ESaxDistanceMetrics<T> implements DistanceMetrics<T> {
@@ -14,8 +14,8 @@ public class ESaxDistanceMetrics<T> implements DistanceMetrics<T> {
 
     @Override
     public double distance(T a, T b) {
-        if (a instanceof TimeSeries && b instanceof TimeSeries) {
-            //return DistanceUtils.esax((TimeSeries) a,(TimeSeries)b,this.wordSize);
+        if (a instanceof Series && b instanceof Series) {
+            //return DistanceUtils.esax((Series) a,(Series)b,this.wordSize);
             return 0;
         } else {
             System.out.println("Error");
