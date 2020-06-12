@@ -6,11 +6,20 @@ import cn.edu.cug.cs.gtl.io.File
 import cn.edu.cug.cs.gtl.series.common.SeriesBuilder
 import cn.edu.cug.cs.gtl.series.common.Series
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 import java.io.*
 
 
 class TimeSeriesTest {
+    var testFileName:String =""
+    @Before
+    fun setUp() {
+        Config.setConfigFile("series.properties")
+        testFileName = (Config.getTestOutputDirectory()
+                + File.separator + "test.series")
+    }
+
     @Test
     fun copy() {
         val xs = doubleArrayOf(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0)
@@ -66,8 +75,4 @@ class TimeSeriesTest {
         }
     }
 
-    companion object {
-        var testFileName = (Config.getTestOutputDirectory()
-                + File.separator + "test.timeseries")
-    }
 }

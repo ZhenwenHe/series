@@ -6,6 +6,7 @@ import cn.edu.cug.cs.gtl.io.File
 import cn.edu.cug.cs.gtl.series.common.MultiSeries
 import cn.edu.cug.cs.gtl.series.common.SeriesBuilder
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -13,6 +14,14 @@ import java.io.IOException
 
 
 class MultiSeriesTest {
+    var testFileName:String =""
+    @Before
+    fun setUp() {
+        Config.setConfigFile("series.properties")
+        testFileName = (Config.getTestOutputDirectory()
+                + File.separator + "test.series")
+    }
+
     @Test
     fun readTSV() {
     }
@@ -50,10 +59,10 @@ class MultiSeriesTest {
         )
         val ms = SeriesBuilder.build("test","value",xs,ys, Pair("label","1"))
         try {
-            val f = FileOutputStream(Config.getTestOutputDirectory() + File.separator + "test.series")
+            val f = FileOutputStream(testFileName)
             ms.write(f)
             f.close()
-            val f2 = FileInputStream(Config.getTestOutputDirectory() + File.separator + "test.series")
+            val f2 = FileInputStream(testFileName)
             val ms2 = SeriesBuilder.parseMultiSeriesFrom(f2)
             val s2 = ms2.getSeries(0)
             Assert.assertArrayEquals(s2.values, ys[0], 0.001)

@@ -14,6 +14,7 @@ class ExperimentalConfigTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
+        Config.setConfigFile("series.properties")
     }
 
     @After

@@ -6,10 +6,19 @@ import cn.edu.cug.cs.gtl.io.File
 import cn.edu.cug.cs.gtl.series.common.Series
 import cn.edu.cug.cs.gtl.series.common.SeriesBuilder
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 import java.io.*
 
 class SeriesTest {
+    var testFileName:String =""
+    @Before
+    fun setUp() {
+        Config.setConfigFile("series.properties")
+        testFileName = (Config.getTestOutputDirectory()
+                + File.separator + "test.series")
+    }
+
     @Test
     fun copy() {
         val ys = doubleArrayOf(50.0, 10.0, 20.0, 30.0, 40.0, 70.0, 90.0, 10.0, 30.0, 40.0)
@@ -57,7 +66,6 @@ class SeriesTest {
     }
 
     companion object {
-        var testFileName = (Config.getTestOutputDirectory()
-                + File.separator + "test.series")
+
     }
 }

@@ -8,10 +8,19 @@ import cn.edu.cug.cs.gtl.series.common.Series
 import cn.edu.cug.cs.gtl.series.common.SeriesBuilder
 import cn.edu.cug.cs.gtl.series.common.pax.TIOPlane
 import cn.edu.cug.cs.gtl.series.distances.HaxDistanceMetrics
+import org.junit.Before
 import org.junit.Test
 
 
 class ClassificationTest {
+    var testFileName:String =""
+    @Before
+    fun setUp() {
+        Config.setConfigFile("series.properties")
+        testFileName = (Config.getTestOutputDirectory()
+                + File.separator + "test.series")
+    }
+
     @Test
     fun predict() {
         val trainFilePath =

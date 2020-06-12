@@ -230,33 +230,7 @@ public class SeriesBuilder {
         return new Series(builder.build());
     }
 
-    public static Iterable<Value> iterable(double[] data){
-        ArrayList<Value> values = new ArrayList<>();
-        for(double d: data)
-            values.add(ValueWrapper.of(d));
-        return values;
-    }
 
-    public static Iterable<Value> iterable(float[] data){
-        ArrayList<Value> values = new ArrayList<>();
-        for(float d: data)
-            values.add(ValueWrapper.of(d));
-        return values;
-    }
-
-    public static Iterable<Value> iterable(int[] data){
-        ArrayList<Value> values = new ArrayList<>();
-        for(int d: data)
-            values.add(ValueWrapper.of(d));
-        return values;
-    }
-
-    public static Iterable<Value> iterable(long[] data){
-        ArrayList<Value> values = new ArrayList<>();
-        for(long d: data)
-            values.add(ValueWrapper.of(d));
-        return values;
-    }
 
     public static double [] doubleArray(List<Value> ls){
         double [] data = new double[ls.size()];
@@ -268,15 +242,6 @@ public class SeriesBuilder {
         return data;
     }
 
-    public static long [] timestampArray(List<Timestamp> ls){
-        long [] data = new long[ls.size()];
-        int i=0;
-        for(Timestamp v:ls){
-            data[i]=v.getTime();
-            i++;
-        }
-        return data;
-    }
 
     /**
      * 从TSV文件中读取数据构建时序数据集合
@@ -328,7 +293,7 @@ public class SeriesBuilder {
                     .setMeasurement(name)
                     .putTag("filename",name)
                     .putTag("label",labels.get(i))
-                    .addAllFieldValue(iterable(dd))
+                    .addAllFieldValue(ValueWrapper.iterableOf(dd))
                     .build();
             sa.add(s);
             i++;
