@@ -15,6 +15,7 @@ import jetbrains.datalore.vis.svg.SvgSvgElement
 import jetbrains.datalore.vis.swing.SceneMapperJfxPanel
 import jetbrains.letsPlot.geom.geom_histogram
 import jetbrains.letsPlot.geom.geom_boxplot
+import jetbrains.letsPlot.geom.geom_line
 import jetbrains.letsPlot.ggplot
 import jetbrains.letsPlot.ggtitle
 import jetbrains.letsPlot.intern.toSpec
@@ -53,13 +54,16 @@ fun main() {
         // Generate random data-points
         val rand = Random()
         val data = mapOf<String, Any>(
-                "x" to List(500) { rand.nextGaussian() } + List(500) { rand.nextGaussian() + 1.0 },
-                "c" to List(500) { "A" } + List(500) { "B" }
-        )
+                "time" to List(100) { i->i },
+                "value" to List(50) { rand.nextGaussian() } + List(50) { rand.nextGaussian() + 1.0 }
+                )
 
         // Create plot specs using Lets-Plot Kotlin API
-        val geom = geom_histogram(alpha = 0.3, size = 0.0) {
-            x = "x"; fill = "c"
+//        val geom = geom_histogram(alpha = 0.8, size = 0.0) {
+//            x = "x"; fill = "c"
+//        }
+        val geom = geom_line(alpha = 0.8, size = 0.2,color = 0.5) {
+            x = "time"; y="value"
         }
         val p = ggplot(data) + geom + ggtitle("The normal distribution")
 
