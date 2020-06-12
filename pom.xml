@@ -39,16 +39,32 @@
             <id>osgeo</id>
             <name>OSGeo Release Repository</name>
             <url>https://repo.osgeo.org/repository/release/</url>
-            <snapshots><enabled>false</enabled></snapshots>
-            <releases><enabled>true</enabled></releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
         </repository>
         <repository>
             <id>osgeo-snapshot</id>
             <name>OSGeo Snapshot Repository</name>
             <url>https://repo.osgeo.org/repository/snapshot/</url>
-            <snapshots><enabled>true</enabled></snapshots>
-            <releases><enabled>false</enabled></releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
         </repository>
+
+
+        <repository>
+            <id>lets-plot-id</id>
+            <name>lets-plot-maven</name>
+            <url>https://jetbrains.bintray.com/lets-plot-maven/</url>
+        </repository>
+
 
     </repositories>
 
@@ -117,6 +133,39 @@
             <artifactId>kotlin-test-junit</artifactId>
             <version>${kotlin.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.lets-plot</groupId>
+            <artifactId>lets-plot-kotlin-api</artifactId>
+            <version>0.0.10-SNAPSHOT</version>
+        </dependency>
+
+
+<!--        <dependency>-->
+<!--            <groupId>org.jetbrains.lets-plot</groupId>-->
+<!--            <artifactId>lets-plot-batik</artifactId>-->
+<!--            <version>1.4.2</version>-->
+<!--            <type>pom</type>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>org.jetbrains.lets-plot</groupId>
+            <artifactId>lets-plot-common</artifactId>
+            <version>1.4.2</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.jetbrains.lets-plot</groupId>
+            <artifactId>lets-plot-jfx</artifactId>
+            <version>1.4.2</version>
         </dependency>
 
         <!-- 采用slf4j日志门面框架 -->

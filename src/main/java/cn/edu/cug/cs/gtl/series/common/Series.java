@@ -22,7 +22,7 @@ public class Series implements Storable {
 
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
-    protected TSSeries tsSeries=null;
+    TSSeries tsSeries=null;
 
     protected Series(TSSeries s){
         tsSeries=s;
@@ -387,5 +387,6 @@ public class Series implements Storable {
     public double min() {
         return Series.min(SeriesBuilder.doubleArray(tsSeries.getFieldValueList()));
     }
+
 
 }

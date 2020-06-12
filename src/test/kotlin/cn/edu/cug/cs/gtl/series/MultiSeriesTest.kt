@@ -1,8 +1,10 @@
 package cn.edu.cug.cs.gtl.series
 
+import cn.edu.cug.cs.gtl.common.Pair
 import cn.edu.cug.cs.gtl.config.Config
 import cn.edu.cug.cs.gtl.io.File
 import cn.edu.cug.cs.gtl.series.common.MultiSeries
+import cn.edu.cug.cs.gtl.series.common.SeriesBuilder
 import org.junit.Assert
 import org.junit.Test
 import java.io.FileInputStream
@@ -25,10 +27,10 @@ class MultiSeriesTest {
             doubleArrayOf(4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0),
             doubleArrayOf(5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0)
         )
-        val ms = MultiSeries.of(xs, ys)
+        val ms = SeriesBuilder.build("test","value",xs,ys, Pair("label","1"))
         try {
             val bytes = ms.storeToByteArray()
-            val ms2 = MultiSeries.of(bytes)
+            val ms2 = SeriesBuilder.parseMultiSeriesFrom(bytes)
             val s2 = ms2.getSeries(0)
             Assert.assertArrayEquals(s2.values, ys[0], 0.001)
         } catch (e: IOException) {
@@ -46,13 +48,13 @@ class MultiSeriesTest {
             doubleArrayOf(4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0),
             doubleArrayOf(5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0)
         )
-        val ms = MultiSeries.of(xs, ys)
+        val ms = SeriesBuilder.build("test","value",xs,ys, Pair("label","1"))
         try {
             val f = FileOutputStream(Config.getTestOutputDirectory() + File.separator + "test.series")
             ms.write(f)
             f.close()
             val f2 = FileInputStream(Config.getTestOutputDirectory() + File.separator + "test.series")
-            val ms2 = MultiSeries.of(f2)
+            val ms2 = SeriesBuilder.parseMultiSeriesFrom(f2)
             val s2 = ms2.getSeries(0)
             Assert.assertArrayEquals(s2.values, ys[0], 0.001)
         } catch (e: IOException) {
