@@ -84,7 +84,7 @@
 
         <dependency>
             <groupId>cn.edu.cug.cs.gtl</groupId>
-            <artifactId>ml</artifactId>
+            <artifactId>gml</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
