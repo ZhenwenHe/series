@@ -1,5 +1,9 @@
 package cn.edu.cug.cs.gtl.series.visualization
-
+//https://github.com/JetBrains/lets-plot-kotlin/blob/master/docs/guide/user_guide.ipynb
+import cn.edu.cug.cs.gtl.protoswrapper.TimestampWrapper
+import cn.edu.cug.cs.gtl.protoswrapper.ValueWrapper
+import cn.edu.cug.cs.gtl.series.common.Series
+import cn.edu.cug.cs.gtl.series.common.SeriesBuilder
 import javafx.application.Platform
 import jetbrains.datalore.base.geometry.DoubleVector
 import jetbrains.datalore.base.observable.property.ValueProperty
@@ -16,14 +20,19 @@ import jetbrains.datalore.vis.swing.SceneMapperJfxPanel
 import jetbrains.letsPlot.geom.geom_histogram
 import jetbrains.letsPlot.geom.geom_boxplot
 import jetbrains.letsPlot.geom.geom_line
+import jetbrains.letsPlot.geom.geom_point
 import jetbrains.letsPlot.ggplot
 import jetbrains.letsPlot.ggtitle
+import jetbrains.letsPlot.intern.Feature
+import jetbrains.letsPlot.intern.Options
+import jetbrains.letsPlot.intern.Plot
 import jetbrains.letsPlot.intern.toSpec
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
+import java.sql.Timestamp
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.*
@@ -48,24 +57,8 @@ private fun toPlotSize(containerSize: Dimension) = DoubleVector(
         containerSize.height.toDouble() - 2 * PADDING
 )
 
-fun main() {
+private fun run( frameTitle:String, p: Plot) {
     SwingUtilities.invokeLater {
-
-        // Generate random data-points
-        val rand = Random()
-        val data = mapOf<String, Any>(
-                "time" to List(100) { i->i },
-                "value" to List(50) { rand.nextGaussian() } + List(50) { rand.nextGaussian() + 1.0 }
-                )
-
-        // Create plot specs using Lets-Plot Kotlin API
-//        val geom = geom_histogram(alpha = 0.8, size = 0.0) {
-//            x = "x"; fill = "c"
-//        }
-        val geom = geom_line(alpha = 0.8, size = 0.2,color = 0.5) {
-            x = "time"; y="value"
-        }
-        val p = ggplot(data) + geom + ggtitle("The normal distribution")
 
         // Create JFXPanel showing the plot.
         val plotSpec = p.toSpec()
@@ -79,7 +72,7 @@ fun main() {
 
 
         // Show plot in Swing frame.
-        val frame = JFrame("The Minimal Resizable")
+        val frame = JFrame(frameTitle)
         val contentPane = frame.contentPane
         contentPane.add(component)
         frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
@@ -164,6 +157,83 @@ private fun createPlotPanel(
 }
 
 
-class SeriesViewer{
+class SeriesViewer(private val frameTitle:String, private val figureTitle:String){
+    private var data: Any?= null
+    private val features:MutableList<Feature> = arrayListOf()
+
+    constructor(frameTitle:String, figureTitle:String, s: Series):this(frameTitle,figureTitle){
+        data= mapOf<String, Any>(
+                "time" to TimestampWrapper.arrayOf(s.timeValues).asList(),
+                "value" to ValueWrapper.arrayOf(s.fieldValues).asList()
+        )
+        val geom = geom_line(show_legend=true,alpha = 0.8, size = 0.5,color = jetbrains.datalore.base.values.Color.RED) {
+            x = "time"; y="value"
+        }
+        features.add(geom)
+    }
+
+    constructor(frameTitle:String, figureTitle:String, s1: Series,s2: Series):this(frameTitle,figureTitle){
+        data= mapOf<String, Any>(
+                "time" to TimestampWrapper.arrayOf(s1.timeValues).asList(),
+                "value" to ValueWrapper.arrayOf(s1.fieldValues).asList(),
+                "value2" to ValueWrapper.arrayOf(s2.fieldValues).asList()
+        )
+        val geom1 = geom_line(show_legend=true,alpha = 0.8, size = 0.5,color = jetbrains.datalore.base.values.Color.RED) {
+            x = "time"; y="value"
+        }
+        features.add(geom1)
+
+        val geom2 = geom_line(show_legend=true,alpha = 0.8, size = 0.5,color = jetbrains.datalore.base.values.Color.GREEN) {
+            x = "time"; y="value2"
+        }
+        features.add(geom2)
+    }
+
+    constructor(frameTitle:String, figureTitle:String, s1: Series,s2: Series,s3: Series):this(frameTitle,figureTitle){
+        data= mapOf<String, Any>(
+                "time" to TimestampWrapper.arrayOf(s1.timeValues).asList(),
+                "value" to ValueWrapper.arrayOf(s1.fieldValues).asList(),
+                "value2" to ValueWrapper.arrayOf(s2.fieldValues).asList(),
+                "value3" to ValueWrapper.arrayOf(s3.fieldValues).asList()
+        )
+        val geom1 = geom_line(show_legend=true,alpha = 0.8, size = 0.5,color = jetbrains.datalore.base.values.Color.RED) {
+            x = "time"; y="value"
+        }
+        features.add(geom1)
+
+        val geom2 = geom_line(show_legend=true,alpha = 0.8, size = 0.5,color = jetbrains.datalore.base.values.Color.GREEN) {
+            x = "time"; y="value2"
+        }
+        features.add(geom2)
+
+        val geom3 = geom_line(show_legend=true,alpha = 0.8, size = 0.5,color = jetbrains.datalore.base.values.Color.BLUE) {
+            x = "time"; y="value3"
+        }
+        features.add(geom3)
+    }
+
+    /**
+     * for examples:
+     * val geom1 = geom_line(alpha = 0.8, size = 0.5,color = 0.5) {
+     * x = "time"; y="value"
+     * }
+     * val geom2 = geom_line(alpha = 0.8, size = 0.2,color = 5000) {
+     * x = "time"; y="value2"
+     * }
+     * val sv2 = SeriesViewer(frameTitle,figureTitle,data)
+     * sv.plot(geom1,geom2);
+     */
+    fun plot(vararg feature: Feature){
+        var p1 = ggplot(data) + ggtitle(figureTitle)
+        for (f in features){
+            p1+=f
+        }
+        for (f in feature){
+            p1+=f
+        }
+        val p= p1;
+        run(frameTitle,p)
+    }
 
 }
+
