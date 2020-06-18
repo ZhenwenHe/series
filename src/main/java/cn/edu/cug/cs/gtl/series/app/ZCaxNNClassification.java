@@ -24,6 +24,7 @@ public class ZCaxNNClassification {
 
     public static void main(String[] args) {
         LOGGER.debug("begin ZCax NN");
+        Config.setConfigFile("series.properties");
         ExperimentalConfig config = new ExperimentalConfig(Config.getDataDirectory() + File.separatorChar + "log" + File.separatorChar + "series.db");
 
         int m = config.getDataFiles().size();
