@@ -297,7 +297,7 @@ public class TIOPlane implements Storable {
      */
     public byte[] mapZCAX(Series s, int paaSize) {
         TIOPoints tioPoints = cn.edu.cug.cs.gtl.series.common.pax.Utils.pax(s, paaSize);
-        return mapHAX(tioPoints);
+        return mapZCAX(tioPoints);
     }
 
     /**
