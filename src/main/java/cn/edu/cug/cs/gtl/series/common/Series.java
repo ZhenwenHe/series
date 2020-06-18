@@ -4,6 +4,7 @@ import cn.edu.cug.cs.gtl.protos.TSSeries;
 import cn.edu.cug.cs.gtl.protos.Timestamp;
 import cn.edu.cug.cs.gtl.protos.Value;
 import cn.edu.cug.cs.gtl.io.Storable;
+import cn.edu.cug.cs.gtl.protoswrapper.ValueWrapper;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -22,7 +23,7 @@ public class Series implements Storable {
 
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
-    protected TSSeries tsSeries=null;
+    TSSeries tsSeries=null;
 
     protected Series(TSSeries s){
         tsSeries=s;
@@ -70,7 +71,7 @@ public class Series implements Storable {
 
     public double[] getDataY() {
         List<Value> l = getFieldValues();
-        return SeriesBuilder.doubleArray(l);
+        return ValueWrapper.arrayOf(l);
     }
 
     public String getLabel(){
@@ -387,5 +388,6 @@ public class Series implements Storable {
     public double min() {
         return Series.min(SeriesBuilder.doubleArray(tsSeries.getFieldValueList()));
     }
+
 
 }
