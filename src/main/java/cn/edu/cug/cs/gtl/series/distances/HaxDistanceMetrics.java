@@ -1,11 +1,9 @@
 package cn.edu.cug.cs.gtl.series.distances;
 
-import cn.edu.cug.cs.gtl.array.Array;
 import cn.edu.cug.cs.gtl.series.common.Series;
 import cn.edu.cug.cs.gtl.ml.distances.DistanceMetrics;
 import cn.edu.cug.cs.gtl.series.common.pax.TIOPlane;
 
-import java.util.List;
 
 public class HaxDistanceMetrics<T> implements DistanceMetrics<T> {
     protected int wordSize;
