@@ -19,7 +19,7 @@ public class Utils {
      * computational complexity while providing satisfactory sensitivity and selectivity in range
      * query processing.
      */
-    public static byte[] hax(Series ts, int w, TIOPlane tioPlane) {
+    public static byte[] zcax(Series ts, int w, TIOPlane tioPlane) {
         return tioPlane.mapZCAX(ts, w);
     }
 
@@ -31,7 +31,7 @@ public class Utils {
      * @param w
      * @return
      */
-    public static byte[] hax(Series ts, int w) {
+    public static byte[] zcax(Series ts, int w) {
         TIOPlane tioPlane = TIOPlane.of(ts.min(), ts.max());
         return tioPlane.mapZCAX(ts, w);
     }
@@ -94,8 +94,8 @@ public class Utils {
     public static double distance(Series s1, Series s2, int w, TIOPlane tioPlane) {
         if (tioPlane == null)
             tioPlane = TIOPlane.of(Math.min(s1.min(), s2.min()), Math.max(s1.max(), s2.max()));
-        byte[] a = hax(s1, w, tioPlane);
-        byte[] b = hax(s2, w, tioPlane);
+        byte[] a = zcax(s1, w, tioPlane);
+        byte[] b = zcax(s2, w, tioPlane);
         return distance(a, b);
     }
 
@@ -109,8 +109,8 @@ public class Utils {
      */
     public static double distance(Series s1, Series s2, int w) {
         TIOPlane tioPlane = TIOPlane.of(Math.min(s1.min(), s2.min()), Math.max(s1.max(), s2.max()));
-        byte[] a = hax(s1, w, tioPlane);
-        byte[] b = hax(s2, w, tioPlane);
+        byte[] a = zcax(s1, w, tioPlane);
+        byte[] b = zcax(s2, w, tioPlane);
         return distance(a, b);
     }
 

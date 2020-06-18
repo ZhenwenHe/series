@@ -1,5 +1,6 @@
 package cn.edu.cug.cs.gtl.series.common;
 
+import cn.edu.cug.cs.gtl.common.Pair;
 import cn.edu.cug.cs.gtl.io.File;
 import cn.edu.cug.cs.gtl.io.FileDataSplitter;
 import cn.edu.cug.cs.gtl.protos.*;
@@ -229,33 +230,7 @@ public class SeriesBuilder {
         return new Series(builder.build());
     }
 
-    public static Iterable<Value> iterable(double[] data){
-        ArrayList<Value> values = new ArrayList<>();
-        for(double d: data)
-            values.add(ValueWrapper.of(d));
-        return values;
-    }
 
-    public static Iterable<Value> iterable(float[] data){
-        ArrayList<Value> values = new ArrayList<>();
-        for(float d: data)
-            values.add(ValueWrapper.of(d));
-        return values;
-    }
-
-    public static Iterable<Value> iterable(int[] data){
-        ArrayList<Value> values = new ArrayList<>();
-        for(int d: data)
-            values.add(ValueWrapper.of(d));
-        return values;
-    }
-
-    public static Iterable<Value> iterable(long[] data){
-        ArrayList<Value> values = new ArrayList<>();
-        for(long d: data)
-            values.add(ValueWrapper.of(d));
-        return values;
-    }
 
     public static double [] doubleArray(List<Value> ls){
         double [] data = new double[ls.size()];
@@ -267,15 +242,6 @@ public class SeriesBuilder {
         return data;
     }
 
-    public static long [] timestampArray(List<Timestamp> ls){
-        long [] data = new long[ls.size()];
-        int i=0;
-        for(Timestamp v:ls){
-            data[i]=v.getTime();
-            i++;
-        }
-        return data;
-    }
 
     /**
      * 从TSV文件中读取数据构建时序数据集合
@@ -327,7 +293,7 @@ public class SeriesBuilder {
                     .setMeasurement(name)
                     .putTag("filename",name)
                     .putTag("label",labels.get(i))
-                    .addAllFieldValue(iterable(dd))
+                    .addAllFieldValue(ValueWrapper.iterableOf(dd))
                     .build();
             sa.add(s);
             i++;
@@ -552,4 +518,52 @@ public class SeriesBuilder {
     }
 
 
+    public static Series build(String measurement, String fieldKey, double[] fieldValues, Pair<String,String> ... tags){
+        SeriesBuilder builder=  new SeriesBuilder();
+
+        builder.setMeasurement(measurement)
+                .setFieldKey(fieldKey)
+                .addFieldValues(fieldValues);
+        for(Pair<String,String> p : tags){
+            builder.addTag(p.first(),p.second());
+        }
+        return builder.build();
+    }
+
+    private static SeriesBuilder builder(String measurement, String fieldKey, double[] timeValues, double[] fieldValues, Pair<String,String> ... tags){
+        SeriesBuilder builder=  new SeriesBuilder();
+
+        builder.setMeasurement(measurement)
+                .setFieldKey(fieldKey)
+                .addFieldValues(fieldValues)
+                .addTimeValues(timeValues);
+
+        for(Pair<String,String> p : tags){
+            builder.addTag(p.first(),p.second());
+        }
+        return builder;
+    }
+
+    public static Series build(String measurement, String fieldKey, double[] timeValues, double[] fieldValues, Pair<String,String> ... tags){
+        return builder(measurement,fieldKey,timeValues,fieldValues,tags).build();
+    }
+
+    public static MultiSeries build(String measurement,
+                                    String fieldKey,
+                                    double[] timeValues,
+                                    double[][] fieldValues,
+                                    Pair<String,String> ... tags){
+        int i=0;
+        TSMultiSeries.Builder b=TSMultiSeries.newBuilder();
+        for(double[] dd : fieldValues){
+            SeriesBuilder s = builder(measurement,fieldKey,timeValues,dd,tags);
+            s.addTag("id",String.valueOf(i));
+            ++i;
+            Series series=s.build();
+            b.addSeries(series.tsSeries);
+        }
+        MultiSeries r = new MultiSeries();
+        r.tsMultiSeries=b.build();
+        return r;
+    }
 }
