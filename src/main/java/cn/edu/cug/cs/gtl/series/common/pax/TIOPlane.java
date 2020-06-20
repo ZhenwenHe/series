@@ -138,6 +138,87 @@ public class TIOPlane implements Storable {
 
     /**
      * 将TIOPoint映射到4X4的网格中
+     *    5 6   9 10
+     *    4 7   8 11
+     *    3 2   13 12
+     *    0 1   14 15
+     * @param tioPoint
+     * @return hilbet curve index [0-15]
+     */
+    public byte hilbertMap(TIOPoint tioPoint) {
+        TIOPoint p = normalize(tioPoint);
+        //判断所属象限
+        double v = p.getValue() - 0.5;
+        double a = p.getAngle() - 0.5;
+        if (v >= 0 && a >= 0) {//第一象限
+            if (v <= 0.25 && a <= 0.25) {
+                return 8;
+            } else if (v <= 0.25 && a > 0.25) {
+                return 11;
+            } else if (v > 0.25 && a <= 0.25) {
+                return 9;
+            } else {
+                return 10;
+            }
+        } else if (v >= 0 && a < 0) { //第二象限
+            if (v <= 0.25 && a >= -0.25) {
+                return 7;
+            } else if (v <= 0.25 && a < -0.25) {
+                return 4;
+            } else if (v > 0.25 && a >= -0.25) {
+                return 6;
+            } else {
+                return 5;
+            }
+        } else if (v < 0 && a < 0) {//第三象限
+            if (v >= -0.25 && a >= -0.25) {
+                return 2;
+            } else if (v >= -0.25 && a < -0.25) {
+                return 3;
+            } else if (v < -0.25 && a >= -0.25) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } else {//第四象限
+            if (v >= -0.25 && a <= 0.25) {
+                return 13;
+            } else if (v >= -0.25 && a > 0.25) {
+                return 12;
+            } else if (v < -0.25 && a <= 0.25) {
+                return 14;
+            } else {
+                return 15;
+            }
+        }
+    }
+
+    /**
+     * @param tioPoints
+     * @return
+     */
+    public byte[] hilbertMap(TIOPoints tioPoints) {
+        int s = tioPoints.size();
+        byte[] bytes = new byte[s];
+        s = 0;
+        for (TIOPoint p : tioPoints) {
+            bytes[s] = hilbertMap(p);
+            s++;
+        }
+        return bytes;
+    }
+
+    /**
+     * @param s
+     * @param paaSize
+     * @return
+     */
+    public byte[] hilbertMap(Series s, int paaSize) {
+        TIOPoints tioPoints = cn.edu.cug.cs.gtl.series.common.pax.Utils.pax(s, paaSize);
+        return hilbertMap(tioPoints);
+    }
+    /**
+     * 将TIOPoint映射到4X4的网格中
      *    7  6     2  3
      *    5  4     0  1
      *    13 12    8  9
@@ -297,7 +378,7 @@ public class TIOPlane implements Storable {
      */
     public byte[] mapZCAX(Series s, int paaSize) {
         TIOPoints tioPoints = cn.edu.cug.cs.gtl.series.common.pax.Utils.pax(s, paaSize);
-        return mapHAX(tioPoints);
+        return mapZCAX(tioPoints);
     }
 
     /**

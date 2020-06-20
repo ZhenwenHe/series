@@ -152,6 +152,41 @@ public class DistanceUtils {
         return cn.edu.cug.cs.gtl.series.common.hax.Utils.distances(train, test, w);
     }
 
+    /**
+     * @param a        Array with the input time series.
+     * @param b        Array with the input time series.
+     * @param w        the total number of divisions.
+     * @param tioPlane the global TIOPlane
+     * @return distance of zcax .
+     * @brief calculate the hax distance between two time series a and b
+     */
+    public static double zcax(Series a, Series b, int w, TIOPlane tioPlane) {
+        return cn.edu.cug.cs.gtl.series.common.zcax.Utils.distance(a, b, w, tioPlane);
+    }
+
+    /**
+     * calculate the zcax distance between two multi time series a and b
+     *
+     * @param train
+     * @param test
+     * @param w
+     * @return
+     */
+    public static Array zcax(MultiSeries train, MultiSeries test, int w) {
+        return cn.edu.cug.cs.gtl.series.common.zcax.Utils.distances(train, test, w);
+    }
+
+    /**
+     * @param a Array with the input time series.
+     * @param b Array with the input time series.
+     * @param w the total number of divisions.
+     * @return distance of zcax .
+     * @brief calculate the hax distance between two time series a and b
+     */
+    public static double zcax(Series a, Series b, int w) {
+        return cn.edu.cug.cs.gtl.series.common.zcax.Utils.distance(a, b, w);
+    }
+
 
     /**
      * esax distance
