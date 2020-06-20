@@ -37,6 +37,10 @@ public class Series implements Storable {
         return tsSeries.getSchema().getFieldKey();
     }
 
+    public Schema getSchema(){
+        return SchemaBuilder.build(tsSeries.getSchema());
+    }
+
     public List<Value> getFieldValues(){
         return tsSeries.getFieldValueList();
     }
