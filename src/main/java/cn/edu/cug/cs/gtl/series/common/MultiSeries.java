@@ -61,7 +61,7 @@ public class MultiSeries  implements Storable{
      */
     public String getLabel(int i) {
         if(tsMultiSeries==null) return "";
-        return tsMultiSeries.getSeries(i).getTagMap().get("label");
+        return tsMultiSeries.getSeries(i).getSchema().getTagMap().get("label");
     }
 
     /**
@@ -72,7 +72,7 @@ public class MultiSeries  implements Storable{
         List<TSSeries> list= tsMultiSeries.getSeriesList();
         ArrayList<String> asz= new ArrayList<>();
         for(TSSeries s: list){
-            asz.add(s.getTagMap().get("label"));
+            asz.add(s.getSchema().getTagMap().get("label"));
         }
         return asz;
     }

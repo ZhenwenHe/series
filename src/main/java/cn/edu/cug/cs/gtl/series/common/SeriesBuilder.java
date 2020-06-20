@@ -4,6 +4,7 @@ import cn.edu.cug.cs.gtl.common.Pair;
 import cn.edu.cug.cs.gtl.io.File;
 import cn.edu.cug.cs.gtl.io.FileDataSplitter;
 import cn.edu.cug.cs.gtl.protos.*;
+import cn.edu.cug.cs.gtl.protoswrapper.TSSeriesWrapper;
 import cn.edu.cug.cs.gtl.protoswrapper.ValueWrapper;
 import cn.edu.cug.cs.gtl.series.common.sax.SAXException;
 
@@ -23,7 +24,7 @@ import java.util.Map;
 public class SeriesBuilder {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
-    private transient TSSeries.Builder builder=TSSeries.newBuilder();
+    private transient TSSeriesWrapper.TSSeriesBuilder builder=TSSeriesWrapper.newBuilder();
 
 
     public static SeriesBuilder newBuilder(){
@@ -217,12 +218,12 @@ public class SeriesBuilder {
 
 
     public SeriesBuilder addTag(String tagKey, String tagValue){
-        builder.putTag(tagKey,tagValue);
+        builder.addTag(tagKey,tagValue);
         return this;
     }
 
     public SeriesBuilder addTags(Map<String,String> tags){
-        builder.putAllTag(tags);
+        builder.addTags(tags);
         return this;
     }
 
@@ -289,10 +290,10 @@ public class SeriesBuilder {
         ArrayList<TSSeries> sa = new ArrayList<>();
         int i=0;
         for(double[] dd: yss){
-            TSSeries s= TSSeries.newBuilder()
+            TSSeries s= TSSeriesWrapper.newBuilder()
                     .setMeasurement(name)
-                    .putTag("filename",name)
-                    .putTag("label",labels.get(i))
+                    .addTag("filename",name)
+                    .addTag("label",labels.get(i))
                     .addAllFieldValue(ValueWrapper.iterableOf(dd))
                     .build();
             sa.add(s);

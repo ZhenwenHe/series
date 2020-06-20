@@ -30,11 +30,11 @@ public class Series implements Storable {
     }
 
     public String getMeasurement(){
-        return tsSeries.getMeasurement();
+        return tsSeries.getSchema().getMeasurement();
     }
 
     public String getFieldKey(){
-        return tsSeries.getFieldKey();
+        return tsSeries.getSchema().getFieldKey();
     }
 
     public List<Value> getFieldValues(){
@@ -42,7 +42,7 @@ public class Series implements Storable {
     }
 
     public Map<String,String> getTagMap(){
-        return tsSeries.getTagMap();
+        return tsSeries.getSchema().getTagMap();
     }
 
     public List<Timestamp> getTimeValues(){
@@ -75,7 +75,7 @@ public class Series implements Storable {
     }
 
     public String getLabel(){
-        return tsSeries.getTagMap().get("label");
+        return tsSeries.getSchema().getTagMap().get("label");
     }
 
     /**
