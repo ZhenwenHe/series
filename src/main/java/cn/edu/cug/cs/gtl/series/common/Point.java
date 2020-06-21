@@ -2,12 +2,17 @@ package cn.edu.cug.cs.gtl.series.common;
 
 import cn.edu.cug.cs.gtl.io.Storable;
 import cn.edu.cug.cs.gtl.protos.TSPoint;
+import cn.edu.cug.cs.gtl.protos.TSSeriesSchema;
 import cn.edu.cug.cs.gtl.protos.Timestamp;
 import cn.edu.cug.cs.gtl.protos.Value;
+import cn.edu.cug.cs.gtl.protoswrapper.TSPointWrapper;
+import cn.edu.cug.cs.gtl.protoswrapper.TSSeriesSchemaWrapper;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Point implements Storable {
@@ -93,4 +98,29 @@ public class Point implements Storable {
         out.write(bs);
         return true;
     }
+
+    /**
+     *
+     * @return
+     */
+    public  List<SeriesSchema> getSchemas(){
+        List<TSSeriesSchema> al = TSPointWrapper.getSchemas(this.tsPoint);
+        ArrayList<SeriesSchema> sl = new ArrayList<>();
+        for(TSSeriesSchema t: al){
+            sl.add(new SeriesSchema(t));
+        }
+        return sl;
+    }
+
+    /**
+     * LineProtocol
+     *                  measurement,    tags         , fields
+     * String lineRecord = "temperature,location=north device=HP, s1=60.0 s2=70";
+     * @param lineRecord
+     * @return
+     */
+    public static Point parseFrom(String lineRecord){
+        return PointBuilder.parseFrom(lineRecord);
+    }
+
 }

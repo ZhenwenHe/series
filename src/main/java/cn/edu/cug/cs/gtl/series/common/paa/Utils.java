@@ -78,7 +78,8 @@ public class Utils {
     public static Series paa(Series a, int paaSize) {
         try {
             double[] d = paa(a.getValues(), (int) paaSize);
-            return new SeriesBuilder()
+            return  SeriesBuilder
+                    .newBuilder()
                     .addFieldValues(d)
                     .build();
         } catch (Exception e) {

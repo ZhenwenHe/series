@@ -136,10 +136,12 @@ public class KmeansClusterer<S extends Series, L extends String> extends Default
                 yData[j] = yData[j]/clusterIndex.size();
             }
 
-            SeriesBuilder seriesBuilder = new SeriesBuilder();
-            seriesBuilder.addFieldValues(yData);
-            seriesBuilder.addTimeValues(xData);
-            Series tmp = seriesBuilder.build();
+            ;
+            Series tmp = SeriesBuilder
+                    .newBuilder()
+                    .addFieldValues(yData)
+                    .addTimeValues(xData)
+                    .build();
             newCentral.add((S) tmp);
         }
         return newCentral;

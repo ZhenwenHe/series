@@ -223,6 +223,13 @@
             <version>${sqlite.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.iotdb/tsfile -->
+        <dependency>
+            <groupId>org.apache.iotdb</groupId>
+            <artifactId>tsfile</artifactId>
+            <version>0.9.3</version>
+        </dependency>
+
     </dependencies>
 
     <build>

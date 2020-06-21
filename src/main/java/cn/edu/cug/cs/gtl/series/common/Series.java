@@ -37,8 +37,8 @@ public class Series implements Storable {
         return tsSeries.getSchema().getFieldKey();
     }
 
-    public Schema getSchema(){
-        return SchemaBuilder.build(tsSeries.getSchema());
+    public SeriesSchema getSchema(){
+        return new SeriesSchema(tsSeries.getSchema());
     }
 
     public List<Value> getFieldValues(){
@@ -394,4 +394,8 @@ public class Series implements Storable {
     }
 
 
+
+    public SeriesBuilder toBuilder(){
+        return SeriesBuilder.toBuilder(this);
+    }
 }

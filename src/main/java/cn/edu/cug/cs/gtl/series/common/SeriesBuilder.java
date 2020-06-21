@@ -31,6 +31,22 @@ public class SeriesBuilder {
         return new SeriesBuilder();
     }
 
+    public static SeriesBuilder toBuilder(Series s){
+        return new SeriesBuilder(TSSeriesWrapper.toBuilder(s.tsSeries));
+    }
+
+    SeriesBuilder(TSSeriesWrapper.TSSeriesBuilder b){
+        builder=b;
+    }
+
+    SeriesBuilder(){
+
+    }
+
+    public SeriesBuilder setSchema(SeriesSchema m){
+        builder.setSchema(m.seriesSchema);
+        return this;
+    }
     public SeriesBuilder setMeasurement(String measurement){
         builder.setMeasurement(measurement);
         return this;
@@ -171,6 +187,10 @@ public class SeriesBuilder {
         return this;
     }
 
+    public SeriesBuilder addFieldValues(List<Value> values){
+        builder.addFieldValues(values);
+        return this;
+    }
 
     public SeriesBuilder addTimeValue(Timestamp timestamp){
         builder.addTimeValue(timestamp);
@@ -216,6 +236,10 @@ public class SeriesBuilder {
         return this;
     }
 
+    public SeriesBuilder addTimeValues(List<Timestamp> timestamps){
+        builder.addTimeValues(timestamps);
+        return this;
+    }
 
     public SeriesBuilder addTag(String tagKey, String tagValue){
         builder.addTag(tagKey,tagValue);

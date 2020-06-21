@@ -7,28 +7,39 @@ import cn.edu.cug.cs.gtl.protos.Value;
 public class PointBuilder {
     private transient TSPoint.Builder builder=TSPoint.newBuilder();
 
-    TSPoint.Builder setMeasurement(String measurement){
+    public TSPoint.Builder setMeasurement(String measurement){
         builder.setMeasurement(measurement);
         return builder;
     }
 
-    TSPoint.Builder addField(String key, Value value){
+    public TSPoint.Builder addField(String key, Value value){
         builder.putField(key,value);
         return builder;
     }
 
-    TSPoint.Builder addTag(String key, String value){
+    public TSPoint.Builder addTag(String key, String value){
         builder.putTag(key,value);
         return builder;
     }
 
-    TSPoint.Builder setTimestamp(long t){
+    public TSPoint.Builder setTimestamp(long t){
         builder.setTimestamp(Timestamp.newBuilder().setTime(t).build());
         return builder;
     }
 
-    Point build(){
+    public Point build(){
         TSPoint tsPoint = this.builder.build();
         return new Point(tsPoint);
+    }
+
+    /**
+     * LineProtocol
+     *                  measurement,    tags         , fields
+     * String lineRecord = "temperature,location=north device=HP, s1=60.0 s2=70";
+     * @param lineRecord
+     * @return
+     */
+    public static Point parseFrom(String lineRecord){
+        return null;
     }
 }
