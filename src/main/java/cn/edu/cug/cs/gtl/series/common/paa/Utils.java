@@ -1,9 +1,7 @@
 package cn.edu.cug.cs.gtl.series.common.paa;
 
 import cn.edu.cug.cs.gtl.array.Array;
-import cn.edu.cug.cs.gtl.common.Pair;
 import cn.edu.cug.cs.gtl.series.common.Series;
-import cn.edu.cug.cs.gtl.series.common.SeriesBuilder;
 
 import java.util.Arrays;
 
@@ -78,10 +76,7 @@ public class Utils {
     public static Series paa(Series a, int paaSize) {
         try {
             double[] d = paa(a.getValues(), (int) paaSize);
-            return  SeriesBuilder
-                    .newBuilder()
-                    .addFieldValues(d)
-                    .build();
+            return  new cn.edu.cug.cs.gtl.series.ml.Series(d);
         } catch (Exception e) {
             return null;
         }
@@ -98,13 +93,7 @@ public class Utils {
         try {
             double[] d = paa(a.getDataY(), (int) paaSize);
             double[] xs = paa(a.getDataX(), (int) paaSize);
-            return SeriesBuilder
-                    .newBuilder()
-                    .setMeasurement(a.getMeasurement())
-                    .setFieldKey(a.getFieldKey())
-                    .addTags(a.getTagMap())
-                    .addValues(xs,d)
-                    .build();
+            return new cn.edu.cug.cs.gtl.series.ml.Series(xs,d);
         } catch (Exception e) {
             return null;
         }

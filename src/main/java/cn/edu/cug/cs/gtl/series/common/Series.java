@@ -1,86 +1,63 @@
 package cn.edu.cug.cs.gtl.series.common;
 
-import cn.edu.cug.cs.gtl.protos.TSSeries;
-import cn.edu.cug.cs.gtl.protos.Timestamp;
-import cn.edu.cug.cs.gtl.protos.Value;
 import cn.edu.cug.cs.gtl.io.Storable;
-import cn.edu.cug.cs.gtl.protoswrapper.ValueWrapper;
-
-import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
+
 /**
- * 表示一对序列数据，包含X轴和Y轴，对于时序数据而言，
- * X轴表示时间，Y轴表示序列值，
- * 当X轴的数据为空的时候，则表示X是一个由0开始，步长为1的一个递增序列，器长度与Y轴一致
+ * 序列接口，每个序列包含两列数据，一列为X值，一列为Y值；其中X值默认为空，表示为默认的递增时间序列，Y值表示测量的序列值；
+ * 此外，序列对象还有一系列的标签，具体完整的概论参见
+ * ref : https://docs.influxdata.com/influxdb/v1.8/concepts/key_concepts/
+ * 其子类包括：
+ * 1）cn.edu.cug.cs.gtl.series.io.Series, 这是一个完整通用的序列类，适合存储，但不适合做快速计算
+ * 2）cn.edu.cug.cs.gtl.series.ml.Series，这是一个简化版本的以数值为主的序列类，适合做快速计算
+ *
  */
-public class Series implements Storable {
+public interface Series extends Storable {
+    Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
-    private static final long serialVersionUID = -1765975818686067145L;
+    /**
+     * 获取X列的值
+     * @return
+     */
+    double[] getDataX();
 
-    private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-
-    TSSeries tsSeries=null;
-
-    protected Series(TSSeries s){
-        tsSeries=s;
-    }
-
-    public String getMeasurement(){
-        return tsSeries.getSchema().getMeasurement();
-    }
-
-    public String getFieldKey(){
-        return tsSeries.getSchema().getFieldKey();
-    }
-
-    public SeriesSchema getSchema(){
-        return new SeriesSchema(tsSeries.getSchema());
-    }
-
-    public List<Value> getFieldValues(){
-        return tsSeries.getFieldValueList();
-    }
-
-    public Map<String,String> getTagMap(){
-        return tsSeries.getSchema().getTagMap();
-    }
-
-    public List<Timestamp> getTimeValues(){
-        return tsSeries.getTimeValueList();
-    }
-
-    public double[] getDataX() {
-        List<Timestamp> l = getTimeValues();
-        int i=0;
-        if(l==null || l.size()==0){
-            double [] xData = new double[tsSeries.getFieldValueCount()];
-            for(i=0;i<xData.length;++i){
-                xData[i]=i;
-            }
-            return xData;
+    /**
+     * 将X列以时间戳的形式返回
+     * @return
+     */
+    default long[] getTimestamps(){
+        double[] xs = getDataX();
+        int s = xs.length;
+        long [] r = new long[s];
+        for(int i=0;i<s;++i){
+            r[i]=(long)xs[i];
         }
-        else{
-            double [] xData = new double[tsSeries.getTimeValueCount()];
-            for(Timestamp t: l){
-                xData[i]=t.getTime();
-                ++i;
-            }
-            return xData;
-        }
+        return r;
     }
 
-    public double[] getDataY() {
-        List<Value> l = getFieldValues();
-        return ValueWrapper.arrayOf(l);
+    /**
+     * 获取默认标签，也就是用于分类和聚类的标签值
+     * @return
+     */
+    String getDefaultLabel();
+
+    /**
+     * 获取序列的Y列值
+     * @return
+     */
+    double[] getDataY();
+
+    /**
+     * 获取序列的Y列的值
+     * @return
+     */
+    default double[] getValues(){
+        return getDataY();
     }
 
-    public String getLabel(){
-        return tsSeries.getSchema().getTagMap().get("label");
-    }
 
     /**
      * Finds the maximal value in series.
@@ -88,7 +65,7 @@ public class Series implements Storable {
      * @param series The series.
      * @return The max value.
      */
-    public static double max(double[] series) {
+    static double max(double[] series) {
         double max = Double.MIN_VALUE;
         for (int i = 0; i < series.length; i++) {
             if (max < series[i]) {
@@ -105,7 +82,7 @@ public class Series implements Storable {
      * @param series The series.
      * @return The min value.
      */
-    public static double min(double[] series) {
+    static double min(double[] series) {
         double min = Double.MAX_VALUE;
         for (int i = 0; i < series.length; i++) {
             if (min > series[i]) {
@@ -121,7 +98,7 @@ public class Series implements Storable {
      * @param series The series.
      * @return The mean value.
      */
-    public static double mean(double[] series) {
+    static double mean(double[] series) {
         double res = 0D;
         int count = 0;
         for (double tp : series) {
@@ -140,7 +117,7 @@ public class Series implements Storable {
      * @param series The series.
      * @return The mean value.
      */
-    public static double mean(int[] series) {
+    static double mean(int[] series) {
         double res = 0D;
         int count = 0;
         for (int tp : series) {
@@ -160,7 +137,7 @@ public class Series implements Storable {
      * @param series The series.
      * @return The median value.
      */
-    public static double median(double[] series) {
+    static double median(double[] series) {
         double[] clonedSeries = series.clone();
         Arrays.sort(clonedSeries);
 
@@ -180,7 +157,7 @@ public class Series implements Storable {
      * @param series The series.
      * @return The variance.
      */
-    public static double variance(double[] series) {
+    static double variance(double[] series) {
         double res = 0D;
         double mean = mean(series);
         int count = 0;
@@ -203,7 +180,7 @@ public class Series implements Storable {
      * @param series The series.
      * @return the standard deviation.
      */
-    public static double standardDeviation(double[] series) {
+    static double standardDeviation(double[] series) {
         double num0 = 0D;
         double sum = 0D;
         int count = 0;
@@ -222,7 +199,7 @@ public class Series implements Storable {
      * @param b
      * @return
      */
-    public static double standardDeviation(double a, double[] b) {
+    static double standardDeviation(double a, double[] b) {
         double s = 0.0;
         int n = b.length;
         for (int i = 0; i < n; i++) {
@@ -240,7 +217,7 @@ public class Series implements Storable {
      * @param normalizationThreshold the zNormalization threshold value.
      * @return Z-normalized series.
      */
-    public static double[] zNormalize(double[] series, double normalizationThreshold) {
+    static double[] zNormalize(double[] series, double normalizationThreshold) {
         double[] res = new double[series.length];
         double sd = standardDeviation(series);
         if (sd < normalizationThreshold) {
@@ -263,7 +240,7 @@ public class Series implements Storable {
      * @return The subseries.
      * @throws IndexOutOfBoundsException If error occurs.
      */
-    public static double[] subseries(double[] series, int start, int end)
+    static double[] subseries(double[] series, int start, int end)
             throws IndexOutOfBoundsException {
         if ((start > end) || (start < 0) || (end > series.length)) {
             throw new IndexOutOfBoundsException("Unable to extract subseries, series length: "
@@ -273,80 +250,19 @@ public class Series implements Storable {
     }
 
 
-    Series() {
-
-    }
-
-    /**
-     * @return
-     */
-    public double[] getValues() {
-        List<Value> vs = tsSeries.getFieldValueList();
-        double[] data = SeriesBuilder.doubleArray(vs);
-        return data;
-    }
-
     /**
      * 对象深拷贝
      *
      * @return 返回新的对象
      */
     @Override
-    public Object clone() {
-        TSSeries s0 = tsSeries.toBuilder().build();
-        Series s1 = new Series();
-        s1.tsSeries=s0;
-        return s1;
-    }
+    Object clone();
 
-    /**
-     * 从存储对象中加载数据，填充本对象
-     *
-     * @param in 表示可以读取的存储对象，可能是内存、文件、管道等
-     * @return 执行成功返回true，否则返回false
-     * @throws IOException
-     */
-    @Override
-    public boolean load(DataInput in) throws IOException {
-        int s = in.readInt();
-        if (s > 0) {
-            byte[] bs = new byte[s];
-            in.readFully(bs);
-            tsSeries=TSSeries.parseFrom(bs);
-        }
-        return true;
-    }
-
-    /**
-     * 将本对象写入存储对象中，存储对象可能是内存、文件、管道等
-     *
-     * @param out ，表示可以写入的存储对象，可能是内存、文件、管道等
-     * @return 执行成功返回true，否则返回false
-     * @throws IOException
-     */
-    @Override
-    public boolean store(DataOutput out) throws IOException {
-
-        int s = 0;//this.data.length;
-        if(tsSeries==null) {
-            out.writeInt(s);
-            return true;
-        }
-        else{
-            byte[] bs = tsSeries.toByteArray();
-            s=bs.length;
-            out.writeInt(s);
-            out.write(bs);
-            return true;
-        }
-    }
 
     /**
      * @return the count of series in this object
      */
-    public long count() {
-        return 1;
-    }
+    long count() ;
 
 
     /**
@@ -354,9 +270,7 @@ public class Series implements Storable {
      *
      * @return
      */
-    public long length() {
-        return tsSeries == null ? 0 : tsSeries.getFieldValueCount();
-    }
+    int length();
 
 
     /**
@@ -366,36 +280,24 @@ public class Series implements Storable {
      * @param paaIndex
      * @return
      */
-    public Series subseries(int paaSize, int paaIndex) {
-        double [] dataY = getDataY();
-        double[] tsY = cn.edu.cug.cs.gtl.series.common.paa.Utils.subseries(dataY, paaSize, paaIndex);
-        double [] fDataX = getDataX();
-        double[] tsX = cn.edu.cug.cs.gtl.series.common.paa.Utils.subseries(fDataX, paaSize, paaIndex);
-        return new SeriesBuilder()
-                .addValues(tsX,tsY)
-                .setMeasurement(getMeasurement())
-                .setFieldKey(getFieldKey())
-                .addTags(getTagMap())
-                .build();
-    }
+    Series subseries(int paaSize, int paaIndex);
 
     /**
+     * 获取Y列的最大值
      * @return
      */
-    public double max() {
-        return Series.max(SeriesBuilder.doubleArray(tsSeries.getFieldValueList()));
-    }
+    double max() ;
 
     /**
+     * 获取Y列的最小值
      * @return
      */
-    public double min() {
-        return Series.min(SeriesBuilder.doubleArray(tsSeries.getFieldValueList()));
-    }
+    double min() ;
 
-
-
-    public SeriesBuilder toBuilder(){
-        return SeriesBuilder.toBuilder(this);
-    }
+    /**
+     * 如果是io模块的Series，则将其转变为ml模块的Series，
+     * 否则返回自身。
+     * @return
+     */
+    Series simplify();
 }

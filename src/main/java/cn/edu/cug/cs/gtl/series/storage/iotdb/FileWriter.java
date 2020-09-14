@@ -1,10 +1,8 @@
 package cn.edu.cug.cs.gtl.series.storage.iotdb;
 
-import cn.edu.cug.cs.gtl.protos.NamedPath;
-import cn.edu.cug.cs.gtl.series.common.SeriesSchema;
+import cn.edu.cug.cs.gtl.series.io.SeriesSchema;
 import org.apache.iotdb.tsfile.common.conf.TSFileConfig;
 import org.apache.iotdb.tsfile.exception.write.WriteProcessException;
-import org.apache.iotdb.tsfile.read.common.Path;
 import org.apache.iotdb.tsfile.write.TsFileWriter;
 import org.apache.iotdb.tsfile.write.schema.MeasurementSchema;
 import org.apache.iotdb.tsfile.write.schema.Schema;

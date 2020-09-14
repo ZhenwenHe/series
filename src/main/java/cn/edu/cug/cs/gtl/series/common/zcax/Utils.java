@@ -7,25 +7,23 @@ import cn.edu.cug.cs.gtl.series.common.pax.TIOPlane;
 
 /**
  * convert pax to z-curve coding
+ * 在HAX的基础上，进行Z曲线编码，然后计算编码字符串之间的距离
  */
 public class Utils {
     /**
      * @param ts
      * @param w  the total number of divisions, or the paaSize.
      * @return result An array of hexadecimal digits [0x0,0xf].
-     * @brief Hexadecimal Aggregate approXimation (HAX). It transforms a numeric time series into a
-     * set of hexadecimal digits. The algorithm was proposed by Zhenwen He et al. and
-     * extends the PAA-based approach inheriting the original algorithm simplicity and low
-     * computational complexity while providing satisfactory sensitivity and selectivity in range
-     * query processing.
+     * @brief  It transforms a numeric time series into a set of ZCAX.
+     *  The algorithm was proposed by Zhenwen He et al.
      */
     public static byte[] zcax(Series ts, int w, TIOPlane tioPlane) {
         return tioPlane.mapZCAX(ts, w);
     }
 
     /**
-     * 将单条时序数据转换成HAX ， 采用默认构建的TIOPlane；
-     * 如果要两条时序数据之间生成的HAX具有可比性，需要采用相同的TIOPlane；
+     * 将单条时序数据转换成ZCAX ， 采用默认构建的TIOPlane；
+     * 如果要两条时序数据之间生成的ZCAX具有可比性，需要采用相同的TIOPlane；
      *
      * @param ts
      * @param w
@@ -37,50 +35,18 @@ public class Utils {
     }
 
     /**
-     * the distance between two hax digits
+     * the distance between two zcax strings
      *
-     * @param h1 hax digit
-     * @param h2 hax digit
-     * @return the distance between two hax digits
-     */
-    public static double distance(byte h1, byte h2) {
-        if (h1 == h2) return 0;
-
-        //计算所属象限
-        int h11 = (h1 / 4);
-        int h22 = (h2 / 4);
-
-        //1 如果在同一个象限内,最大距离为sqrt(2)
-        if (h11 == h22) {
-            //象限内的编号
-            int a = h1 % 4;
-            int b = h2 % 4;
-            //计算象限内的二维网格坐标[0,0],[0,1],[1,1],[1,0]
-            int x1 = a / 2;
-            int y1 = a % 2;
-            int x2 = b / 2;
-            int y2 = b % 2;
-            return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
-        } else {//2 如果不在同一个象限,采用网格距离+最大象限内距离sqrt(2)
-            int[] h1xy = toGridXY(h1);
-            int[] h2xy = toGridXY(h2);
-            return Math.sqrt(2) + Math.sqrt((h1xy[0] - h2xy[0]) * (h1xy[0] - h2xy[0]) + (h1xy[1] - h2xy[1]) * (h1xy[1] - h2xy[1]));
-        }
-    }
-
-    /**
-     * the distance between two hax strings
-     *
-     * @param ts1 hax string
-     * @param ts2 hax string
-     * @return the distance between two hax strings
+     * @param ts1 zcax string
+     * @param ts2 zcax string
+     * @return the distance between two zcax strings
      */
     public static double distance(byte[] ts1, byte[] ts2) {
         int n = Math.min(ts1.length, ts2.length);
         int s = 0;
         for (int i = 0; i < n; ++i)
-            s += distance(ts1[i], ts2[i]);
-        return s;
+            s += (ts1[i]-ts2[i])*(ts1[i]-ts2[i]);
+        return Math.sqrt(s);
     }
 
     /**

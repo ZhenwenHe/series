@@ -4,7 +4,7 @@ import cn.edu.cug.cs.gtl.series.common.MultiSeries;
 import cn.edu.cug.cs.gtl.series.common.Series;
 import cn.edu.cug.cs.gtl.series.common.pax.TIOPlane;
 /**
- * convert pax to hilbert-curve coding
+ * convert hax to hilbert-curve coding
  */
 public class Utils {
     /**
@@ -31,50 +31,18 @@ public class Utils {
     }
 
     /**
-     * the distance between two hax digits
-     *
-     * @param h1 hax digit
-     * @param h2 hax digit
-     * @return the distance between two hax digits
-     */
-    public static double distance(byte h1, byte h2) {
-        if (h1 == h2) return 0;
-
-        //计算所属象限
-        int h11 = (h1 / 4);
-        int h22 = (h2 / 4);
-
-        //1 如果在同一个象限内,最大距离为sqrt(2)
-        if (h11 == h22) {
-            //象限内的编号
-            int a = h1 % 4;
-            int b = h2 % 4;
-            //计算象限内的二维网格坐标[0,0],[0,1],[1,1],[1,0]
-            int x1 = a / 2;
-            int y1 = a % 2;
-            int x2 = b / 2;
-            int y2 = b % 2;
-            return Math.sqrt((y1 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
-        } else {//2 如果不在同一个象限,采用网格距离+最大象限内距离sqrt(2)
-            int[] h1xy = toGridXY(h1);
-            int[] h2xy = toGridXY(h2);
-            return Math.sqrt(2) + Math.sqrt((h1xy[0] - h2xy[0]) * (h1xy[0] - h2xy[0]) + (h1xy[1] - h2xy[1]) * (h1xy[1] - h2xy[1]));
-        }
-    }
-
-    /**
      * the distance between two hax strings
      *
-     * @param ts1 hax string
-     * @param ts2 hax string
+     * @param ts1 hcax string
+     * @param ts2 hcax string
      * @return the distance between two hax strings
      */
     public static double distance(byte[] ts1, byte[] ts2) {
         int n = Math.min(ts1.length, ts2.length);
         int s = 0;
         for (int i = 0; i < n; ++i)
-            s += distance(ts1[i], ts2[i]);
-        return s;
+            s += (ts1[i]-ts2[i])*(ts1[i]-ts2[i]);
+        return Math.sqrt(s);
     }
 
     /**
