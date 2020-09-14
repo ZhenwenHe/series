@@ -314,9 +314,10 @@ public class UCRArchiveReader {
         int i =0;
         line = br.readLine();//skip header
         while (line != null) {
-            Item item=items.get(i);
             //读取一行，以逗号分隔
             String[] columns = line.split(FileDataSplitter.CSV.getDelimiter());
+            Optional<Item> itemOptional=findItem(columns[2].trim());
+            Item item = itemOptional.orElse(new Item());
             //第0个元素为ID
             String label = columns[0];
             //第1个元素为Type

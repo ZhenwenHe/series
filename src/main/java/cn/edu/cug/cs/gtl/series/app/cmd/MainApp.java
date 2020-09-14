@@ -37,7 +37,7 @@ public class MainApp {
             String[] arg ={
                     "-h",
                     "-c","series.properties",
-                    "-d","/Users/zhenwenhe/git/data+local/UCRArchive_96",
+                    "-d","/Users/zhenwenhe/git/data/UCRArchive_2018",
                     "-o","/Users/zhenwenhe/git/data/outputResult.xls",
                     "-p", "5,6",
                     "-a",  "3,17",
