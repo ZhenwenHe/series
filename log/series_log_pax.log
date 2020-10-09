@@ -1,4 +1,4 @@
-INFO DATE TIME CLASS LINE DATASET ALGORITHM REPRESENTATION WORDSIZE ALPHA SCORE
+[series][INFO] [2020-09-14 16:24:58] cn.edu.cug.cs.gtl.series.app.cmd.MainApp | e:\git\data\UCRArchive_2018
 [series][INFO] [2020-09-14 16:25:03] cn.edu.cug.cs.gtl.series.app.cmd.KNNApp | ACSF1 KNN PAX 5 16 0.34
 [series][INFO] [2020-09-14 16:25:07] cn.edu.cug.cs.gtl.series.app.cmd.KNNApp | ACSF1 KNN PAX 6 16 0.35
 [series][INFO] [2020-09-14 16:25:12] cn.edu.cug.cs.gtl.series.app.cmd.KNNApp | ACSF1 KNN PAX 7 16 0.41
@@ -1823,3 +1823,4 @@ INFO DATE TIME CLASS LINE DATASET ALGORITHM REPRESENTATION WORDSIZE ALPHA SCORE
 [series][INFO] [2020-09-30 10:16:06] cn.edu.cug.cs.gtl.series.app.cmd.KNNApp | Yoga KNN PAX 18 16 0.8243333333333334
 [series][INFO] [2020-09-30 10:16:48] cn.edu.cug.cs.gtl.series.app.cmd.KNNApp | Yoga KNN PAX 19 16 0.826
 [series][INFO] [2020-09-30 10:17:34] cn.edu.cug.cs.gtl.series.app.cmd.KNNApp | Yoga KNN PAX 20 16 0.8276666666666667
+[series][INFO] [2020-09-30 10:18:16] cn.edu.cug.cs.gtl.series.app.cmd.KNNApp | Finished
