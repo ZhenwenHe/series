@@ -195,7 +195,21 @@ public class MainApp {
             else if(this.representation.toUpperCase().equals("ZCAX")){
                 app.ZCAX();
             }
-
+            else if(this.representation.toUpperCase().equals("ESAX")){
+                app.ESAX();
+            }
+            else if(this.representation.toUpperCase().equals("SAXTD")){
+                app.SAXTD();
+            }
+            else if(this.representation.toUpperCase().equals("SAXTG")){
+                app.SAXTG();
+            }
+            else if(this.representation.toUpperCase().equals("ED")){
+                app.ED();
+            }
+            else if(this.representation.toUpperCase().equals("DTW")){
+                app.DTW();
+            }
             System.gc();
         }
         else if(this.algorithm.toLowerCase().equals("naivebayes")){
@@ -215,6 +229,21 @@ public class MainApp {
             }
             else if(this.representation.toUpperCase().equals("ZCAX")){
                 app.ZCAX();
+            }
+            else if(this.representation.toUpperCase().equals("ESAX")){
+                app.ESAX();
+            }
+            else if(this.representation.toUpperCase().equals("SAXTD")){
+                app.SAXTD();
+            }
+            else if(this.representation.toUpperCase().equals("SAXTG")){
+                app.SAXTG();
+            }
+            else if(this.representation.toUpperCase().equals("ED")){
+                app.ED();
+            }
+            else if(this.representation.toUpperCase().equals("DTW")){
+                app.DTW();
             }
 
             System.gc();
