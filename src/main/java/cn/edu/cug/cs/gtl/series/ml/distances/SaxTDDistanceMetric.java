@@ -24,7 +24,7 @@ public class SaxTDDistanceMetric<T extends NumericalData> implements DistanceMet
             sa = (Series)a;
         }
         else{
-            System.out.println("HaxDistanceMetric Error: the input object, a is not Series");
+            System.out.println("SaxTDDistanceMetric Error: the input object, a is not Series");
             return Double.MAX_VALUE;
         }
 
@@ -35,7 +35,7 @@ public class SaxTDDistanceMetric<T extends NumericalData> implements DistanceMet
             sb = (Series)b;
         }
         else{
-            System.out.println("HaxDistanceMetric Error: the input object, b is not Series");
+            System.out.println("SaxTDDistanceMetric Error: the input object, b is not Series");
             return Double.MAX_VALUE;
         }
 

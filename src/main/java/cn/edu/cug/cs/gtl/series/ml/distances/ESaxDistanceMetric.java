@@ -17,12 +17,12 @@ public class ESaxDistanceMetric<T extends NumericalData> implements DistanceMetr
     @Override
     public double distance(Object a, Object b) {
         if (a instanceof Series && b instanceof Series) {
-            //return DistanceUtils.esax((Series) a,(Series)b,this.wordSize);
-            return 0;
-        } else {
+            return DistanceUtils.esax((Series) a, (Series) b, (int)this.wordSize,alphabet);
+        }
+        else{
             Series sa,sb;
             if(a instanceof Vector) {
-                sa=new Series((Vector)a);
+                sa= new Series((Vector)a);
             }
             else if(a instanceof  Series){
                 sa = (Series)a;
@@ -42,7 +42,7 @@ public class ESaxDistanceMetric<T extends NumericalData> implements DistanceMetr
                 System.out.println("HaxDistanceMetric Error: the input object, b is not Series");
                 return Double.MAX_VALUE;
             }
-            return 0;
+            return DistanceUtils.esax( sa, sb, (int) this.wordSize, this.alphabet);
         }
 
     }

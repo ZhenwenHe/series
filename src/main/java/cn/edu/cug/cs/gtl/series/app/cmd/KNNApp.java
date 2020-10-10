@@ -173,4 +173,105 @@ public class KNNApp {
         }
     }
 
+    public void ESAX(){
+        try {
+            for(Pair<String,String> p : this.dataFiles){
+                MultiSeries train = MultiSeries.fromTSVFile(p.first());
+                MultiSeries test = MultiSeries.fromTSVFile(p.second());
+
+                TrainSet<Series> trainSet = train.toTrainSet();
+                TestSet<Series> testSet = test.toTestSet();
+
+                for(int paaSize=this.paaSizeRange.first();paaSize<this.paaSizeRange.second();++paaSize){
+                    for(int alpha =this.alphabetRange.first();alpha<this.alphabetRange.second();++alpha) {
+                        ESaxDistanceMetric<Series> disFunc = new ESaxDistanceMetric<>(paaSize,  alpha);
+                        NearestNeighbourClassifier nn = new NearestNeighbourClassifier(k, false, disFunc);
+                        nn.setTestSet(testSet);
+                        nn.setTrainSet(trainSet);
+                        String name = p.first().substring(p.first().lastIndexOf(File.separator) + 1);
+                        name = name.substring(0, name.indexOf('_'));
+                        LOGGER.info(name + " KNN ESAX " + String.valueOf(paaSize) + " " + String.valueOf(alpha)+ " " + String.valueOf(nn.score()));
+                        System.gc();
+                    }
+                    System.gc();
+                }
+                System.gc();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void SAXTD(){
+        try {
+            for(Pair<String,String> p : this.dataFiles){
+                MultiSeries train = MultiSeries.fromTSVFile(p.first());
+                MultiSeries test = MultiSeries.fromTSVFile(p.second());
+                TrainSet<Series> trainSet = train.toTrainSet();
+                TestSet<Series> testSet = test.toTestSet();
+
+                for(int paaSize=this.paaSizeRange.first();paaSize<this.paaSizeRange.second();++paaSize){
+                    for(int alpha =this.alphabetRange.first();alpha<this.alphabetRange.second();++alpha) {
+                        SaxTDDistanceMetric<Series> disFunc = new SaxTDDistanceMetric<>(paaSize,  alpha);
+                        NearestNeighbourClassifier nn = new NearestNeighbourClassifier(k, false, disFunc);
+                        nn.setTestSet(testSet);
+                        nn.setTrainSet(trainSet);
+                        String name = p.first().substring(p.first().lastIndexOf(File.separator) + 1);
+                        name = name.substring(0, name.indexOf('_'));
+                        LOGGER.info(name + " KNN SAXTD " + String.valueOf(paaSize) + " " + String.valueOf(alpha)+ " " + String.valueOf(nn.score()));
+                        System.gc();
+                    }
+                    System.gc();
+                }
+                System.gc();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void ED(){
+        try {
+            for(Pair<String,String> p : this.dataFiles){
+                MultiSeries train = MultiSeries.fromTSVFile(p.first());
+                MultiSeries test = MultiSeries.fromTSVFile(p.second());
+                TrainSet<Series> trainSet = train.toTrainSet();
+                TestSet<Series> testSet = test.toTestSet();
+
+                EuclideanDistanceMetric<Series> disFunc = new EuclideanDistanceMetric<>();
+                NearestNeighbourClassifier nn = new NearestNeighbourClassifier(k, false, disFunc);
+                nn.setTestSet(testSet);
+                nn.setTrainSet(trainSet);
+                String name = p.first().substring(p.first().lastIndexOf(File.separator) + 1);
+                name = name.substring(0, name.indexOf('_'));
+                LOGGER.info(name + " KNN ED " + String.valueOf(0) + " " + String.valueOf(0)+ " " + String.valueOf(nn.score()));
+                System.gc();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void DTW(){
+        try {
+            for(Pair<String,String> p : this.dataFiles){
+                MultiSeries train = MultiSeries.fromTSVFile(p.first());
+                MultiSeries test = MultiSeries.fromTSVFile(p.second());
+                TrainSet<Series> trainSet = train.toTrainSet();
+                TestSet<Series> testSet = test.toTestSet();
+
+                DTWDistanceMetric<Series> disFunc = new DTWDistanceMetric<>();
+                NearestNeighbourClassifier nn = new NearestNeighbourClassifier(k, false, disFunc);
+                nn.setTestSet(testSet);
+                nn.setTrainSet(trainSet);
+                String name = p.first().substring(p.first().lastIndexOf(File.separator) + 1);
+                name = name.substring(0, name.indexOf('_'));
+                LOGGER.info(name + " KNN DTW " + String.valueOf(0) + " " + String.valueOf(0)+ " " + String.valueOf(nn.score()));
+                System.gc();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
