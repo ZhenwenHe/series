@@ -11,19 +11,28 @@ public class Utils {
      * @return
      */
     public static double[] saxtd(double[] ts, int w) {
-        try {
-            double[] mid = cn.edu.cug.cs.gtl.series.common.paa.Utils.paa(ts, w);
+        if(ts.length<w){
             double[] d = new double[w + 1];
-            double perSegment = (double) ts.length / (double) w;
-            double i = 0.0;
-            for (int count = 0; count < w; count++) {
-                d[count] = ts[(int) i] - mid[count];
-                i = count * perSegment;
+            for(int i=0;i<ts.length;++i){
+                d[i]=ts[i];
             }
-            d[w] = ts[(int) i] - mid[w - 1];
             return d;
-        } catch (Exception e) {
-            return null;
+        }
+        else{
+            try {
+                double[] mid = cn.edu.cug.cs.gtl.series.common.paa.Utils.paa(ts, w);
+                double[] d = new double[w + 1];
+                double perSegment = (double) ts.length / (double) w;
+                double i = 0.0;
+                for (int count = 0; count < w; count++) {
+                    d[count] = ts[(int) i] - mid[count];
+                    i = count * perSegment;
+                }
+                d[w] = ts[(int) i] - mid[w - 1];
+                return d;
+            } catch (Exception e) {
+                return null;
+            }
         }
     }
 
@@ -58,6 +67,7 @@ public class Utils {
      * @return 返回两个时序数据对象之间的SAXTD距离
      */
     public static double distance(Series s1, Series s2, int w, int alphabet) {
+
         double t1 = cn.edu.cug.cs.gtl.series.common.sax.Utils.distance(s1, s2, w, alphabet);
         double t2 = distance(s1.getValues(), s2.getValues(), w);
         double res = t1 * t1 + t2;

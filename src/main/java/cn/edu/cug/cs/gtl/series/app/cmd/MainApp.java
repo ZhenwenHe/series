@@ -20,11 +20,17 @@ import java.util.regex.Pattern;
 
 /**
  * Java -cp series-1.0-SNAPSHOT-jar-with-dependencies.jar cn.edu.cug.cs.gtl.series.app.cmd.MainApp -h  -c series.properties  -d /Users/zhenwenhe/git/data+local/UCRArchive_96  -o /Users/zhenwenhe/git/data/outputResult.xls  -p 5,21  -a 3,17   -m  knn  -r  hax
+ *
+ *
+ * * Java -cp series-1.0-SNAPSHOT-jar-with-dependencies.jar cn.edu.cug.cs.gtl.series.app.cmd.MainApp -h  -c series.properties  -d /Users/zhenwenhe/git/data+local/UCRArchive_96  -o /Users/zhenwenhe/git/data/outputResult.xls  -p 5,21  -a 3,17   -m  knn  -r  hax -b Soomth
+ *
  */
 public class MainApp {
     public static final Logger LOGGER = LoggerFactory.getLogger(MainApp.class); //slf4j
     String dataDirectory=null;//输入数据文件的根目录
     List<Pair<String, String>> dataFiles=null;//所有有效的数据集文件对，每对包含一个训练文件和一个测试文件
+    String beginFileName=null;
+    String endFileName=null;
     Pair<Integer, Integer> paaSizeRange=null;
     Pair<Integer, Integer> alphabetRange=null;
     String outputFile=null;//输出结果文件
@@ -39,10 +45,11 @@ public class MainApp {
                     "-c","series.properties",
                     "-d","/Users/zhenwenhe/git/data/UCRArchive_2018",
                     "-o","/Users/zhenwenhe/git/data/outputResult.xls",
-                    "-p", "5,6",
-                    "-a",  "3,17",
-                    "-m", "naivebayes",
-                    "-r" , "hax"
+                    "-p", "15,21",
+                    "-a",  "16,17",
+                    "-m", "knn",
+                    "-r" , "sax",
+                    "-b" , "Smooth"
             };
             args=arg;
         };
@@ -57,7 +64,7 @@ public class MainApp {
     protected  void getAllDataFiles(){
         UCRArchiveReader reader= new UCRArchiveReader(this.dataDirectory,true,true,Integer.MAX_VALUE,Integer.MAX_VALUE);
         //按照从参数设置，遍历数据文件
-        this.dataFiles = reader.getDataFiles();
+        this.dataFiles = reader.getDataFiles(this.beginFileName,this.endFileName);
     }
 
     protected  void parseLine(Options options, String[] args){
@@ -129,6 +136,14 @@ public class MainApp {
                 this.representation=commandLine.getOptionValue('r');
             }
 
+            if (commandLine.hasOption('b')) {
+                this.beginFileName=commandLine.getOptionValue('b');
+            }
+
+            if (commandLine.hasOption('e')) {
+                this.endFileName=commandLine.getOptionValue('e');
+            }
+
             getAllDataFiles();
         }
         catch (ParseException e) {
@@ -170,6 +185,13 @@ public class MainApp {
         opt.setRequired(false);
         options.addOption(opt);
 
+        opt = new Option("b", "beginFileName", true, "beginFileName");
+        opt.setRequired(false);
+        options.addOption(opt);
+
+        opt = new Option("e", "endFileName", true, "endFileName");
+        opt.setRequired(false);
+        options.addOption(opt);
 
         return options;
     }

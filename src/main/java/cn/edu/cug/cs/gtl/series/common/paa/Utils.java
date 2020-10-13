@@ -21,7 +21,11 @@ public class Utils {
         // fix the length
         int len = ts.length;
         if (len < paaSize) {
-            throw new Exception("PAA size can't be greater than the series size.");
+            double [] ps = new double[paaSize+1];
+            for(int i=0;i<len;++i)
+                ps[i]=ts[i];
+            return ps;
+            //throw new Exception("PAA size can't be greater than the series size.");
         }
         // check for the trivial case
         if (len == paaSize) {

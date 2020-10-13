@@ -425,4 +425,23 @@ public class UCRArchiveReader {
         return dfs;
     }
 
+    /**
+     * 只提取位于[startFile,endFile]之间的文件进行计算，比较的规则按照String来进行比较
+     * @param startFile
+     * @param endFile
+     * @return
+     */
+    public List<Pair<String,String>> getDataFiles(String startFile, String endFile){
+        List<Pair<String,String>> dfs= new ArrayList<>();
+        for(Item i: items){
+            if(startFile!=null && startFile.isEmpty()==false)
+                if(i.getName().compareTo(startFile)<0) continue;
+
+            if(endFile!=null && endFile.isEmpty()==false)
+                if(i.getName().compareTo(endFile)>0) continue;
+
+            dfs.add(new Pair<>(i.getTrainFile(),i.getTestFile()));
+        }
+        return dfs;
+    }
 }
