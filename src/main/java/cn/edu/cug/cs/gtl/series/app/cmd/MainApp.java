@@ -43,13 +43,13 @@ public class MainApp {
             String[] arg ={
                     "-h",
                     "-c","series.properties",
-                    "-d","/Users/zhenwenhe/git/data/UCRArchive_2018",
-                    "-o","/Users/zhenwenhe/git/data/outputResult.xls",
-                    "-p", "15,21",
-                    "-a",  "16,17",
+                    "-d","e:/git/data/UCRArchive_2018",
+                    "-o","e:/git/data//outputResult.xls",
+                    "-p", "5,21",
+                    "-a",  "3,17",
                     "-m", "knn",
-                    "-r" , "sax",
-                    "-b" , "Smooth"
+                    "-r" , "saxtd",
+                    "-b", "Smooth"
             };
             args=arg;
         };
