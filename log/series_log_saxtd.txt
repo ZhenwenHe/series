@@ -1,4 +1,4 @@
-[series][INFO] [2020-10-12 16:36:22] cn.edu.cug.cs.gtl.series.app.cmd.MainApp | ./UCRArchive_2018
+INFO DATE TIME CLASS LINE DATASET ALGORITHM REPRESENTATION WORDSIZE ALPHA SCORE
 [series][INFO] [2020-10-12 16:36:23] cn.edu.cug.cs.gtl.series.app.cmd.KNNApp | ACSF1 KNN SAXTD 5 3 0.55
 [series][INFO] [2020-10-12 16:36:23] cn.edu.cug.cs.gtl.series.app.cmd.KNNApp | ACSF1 KNN SAXTD 5 4 0.55
 [series][INFO] [2020-10-12 16:36:23] cn.edu.cug.cs.gtl.series.app.cmd.KNNApp | ACSF1 KNN SAXTD 5 5 0.55
